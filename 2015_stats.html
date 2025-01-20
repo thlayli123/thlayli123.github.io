@@ -1,0 +1,1526 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+    <title>Tournament Director Player Statistics</title>
+  </head>
+
+  <style type="text/css">
+    BODY
+    {
+      background-color: #7288a3;
+    }
+
+    .infotable
+    {
+      border: 2px solid #000000;
+      padding: 8px;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: Tahoma;
+      font-size: 12pt;
+    }
+
+    .eventname
+    {
+      font-size: 16pt;
+      font-weight: bold;
+    }
+
+    .description
+    {
+      font-weight: bold;
+    }
+
+    .statsTable
+    {
+      border: 2px solid #000000;
+      padding: 8px;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: Tahoma;
+      font-size: 10pt;
+    }
+
+    .statsColumnHeader
+    {
+      font-weight: bold;
+      padding-left: 5px;
+      padding-right: 5px;
+      white-space: nowrap;
+   }
+
+    .statsColumn
+    {
+      padding-left: 5px;
+      padding-right: 5px;
+      white-space: nowrap;
+   }
+
+    .odd
+    {
+    }
+
+    .even
+    {
+      background-color: #eeeeee;
+    }
+
+  </style>
+
+  <script>
+
+var TDSort = (function()
+{
+  // the column index on which we are sorting
+  var sortIndex = -1;
+  // was the last sort a reverse sort?
+  var reverseSort = false;
+  // not going to try too hard for browser compatibility - just check for IE or non-IE
+  var mTextKey = document.all ? "innerText" : "textContent";
+  var mTableID = "";
+  var mHeaderRowID = "";
+  var mData = [[{Text: "1", SortValue: 0, Align: "right", Index: 0, IsIndex: true}, {Text: "Donnie Jones", SortValue: "Donnie Jones", Align: "left"}, {Text: "69.00", SortValue: 69, Align: "right"}, {Text: "11", SortValue: 11, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "8", SortValue: 8, Align: "right"}, {Text: "$590.00", SortValue: 590, Align: "right"}, {Text: "$391.00", SortValue: 391, Align: "right"}, {Text: "19.00", SortValue: 19, Align: "right"}], [{Text: "2", SortValue: 0, Align: "right", Index: 1}, {Text: "Chris Anderson", SortValue: "Chris Anderson", Align: "left"}, {Text: "68.00", SortValue: 68, Align: "right"}, {Text: "12", SortValue: 12, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "7", SortValue: 7, Align: "right"}, {Text: "$640.00", SortValue: 640, Align: "right"}, {Text: "$115.00", SortValue: 115, Align: "right"}, {Text: "10.00", SortValue: 10, Align: "right"}], [{Text: "3", SortValue: 0, Align: "right", Index: 2}, {Text: "Mike Caouette", SortValue: "Mike Caouette", Align: "left"}, {Text: "60.00", SortValue: 60, Align: "right"}, {Text: "12", SortValue: 12, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "7", SortValue: 7, Align: "right"}, {Text: "$640.00", SortValue: 640, Align: "right"}, {Text: "$-12.00", SortValue: -12, Align: "right"}, {Text: "9.00", SortValue: 9, Align: "right"}], [{Text: "4", SortValue: 0, Align: "right", Index: 3}, {Text: "Brian Showalter", SortValue: "Brian Showalter", Align: "left"}, {Text: "60.00", SortValue: 60, Align: "right"}, {Text: "11", SortValue: 11, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "8", SortValue: 8, Align: "right"}, {Text: "$580.00", SortValue: 580, Align: "right"}, {Text: "$-33.00", SortValue: -33, Align: "right"}, {Text: "6.00", SortValue: 6, Align: "right"}], [{Text: "5", SortValue: 0, Align: "right", Index: 4}, {Text: "Joe Garrison", SortValue: "Joe Garrison", Align: "left"}, {Text: "53.00", SortValue: 53, Align: "right"}, {Text: "11", SortValue: 11, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "5", SortValue: 5, Align: "right"}, {Text: "$590.00", SortValue: 590, Align: "right"}, {Text: "$80.00", SortValue: 80, Align: "right"}, {Text: "5.00", SortValue: 5, Align: "right"}], [{Text: "6", SortValue: 0, Align: "right", Index: 5}, {Text: "Chad Visser", SortValue: "Chad Visser", Align: "left"}, {Text: "53.00", SortValue: 53, Align: "right"}, {Text: "12", SortValue: 12, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "6", SortValue: 6, Align: "right"}, {Text: "$640.00", SortValue: 640, Align: "right"}, {Text: "$-19.00", SortValue: -19, Align: "right"}, {Text: "22.00", SortValue: 22, Align: "right"}], [{Text: "7", SortValue: 0, Align: "right", Index: 6}, {Text: "Kevin Hadall", SortValue: "Kevin Hadall", Align: "left"}, {Text: "52.00", SortValue: 52, Align: "right"}, {Text: "9", SortValue: 9, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "$490.00", SortValue: 490, Align: "right"}, {Text: "$343.00", SortValue: 343, Align: "right"}, {Text: "15.00", SortValue: 15, Align: "right"}], [{Text: "8", SortValue: 0, Align: "right", Index: 7}, {Text: "Dave Figueroa", SortValue: "Dave Figueroa", Align: "left"}, {Text: "49.00", SortValue: 49, Align: "right"}, {Text: "10", SortValue: 10, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "$530.00", SortValue: 530, Align: "right"}, {Text: "$66.00", SortValue: 66, Align: "right"}, {Text: "10.00", SortValue: 10, Align: "right"}], [{Text: "9", SortValue: 0, Align: "right", Index: 8}, {Text: "Greg Meeks", SortValue: "Greg Meeks", Align: "left"}, {Text: "44.00", SortValue: 44, Align: "right"}, {Text: "8", SortValue: 8, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "3", SortValue: 3, Align: "right"}, {Text: "$430.00", SortValue: 430, Align: "right"}, {Text: "$279.00", SortValue: 279, Align: "right"}, {Text: "10.00", SortValue: 10, Align: "right"}], [{Text: "10", SortValue: 0, Align: "right", Index: 9}, {Text: "Charlie Capers", SortValue: "Charlie Capers", Align: "left"}, {Text: "43.00", SortValue: 43, Align: "right"}, {Text: "11", SortValue: 11, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "$580.00", SortValue: 580, Align: "right"}, {Text: "$-138.00", SortValue: -138, Align: "right"}, {Text: "13.00", SortValue: 13, Align: "right"}], [{Text: "11", SortValue: 0, Align: "right", Index: 10}, {Text: "Thomas Hanson", SortValue: "Thomas Hanson", Align: "left"}, {Text: "41.00", SortValue: 41, Align: "right"}, {Text: "9", SortValue: 9, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "3", SortValue: 3, Align: "right"}, {Text: "$490.00", SortValue: 490, Align: "right"}, {Text: "$65.00", SortValue: 65, Align: "right"}, {Text: "17.00", SortValue: 17, Align: "right"}], [{Text: "12", SortValue: 0, Align: "right", Index: 11}, {Text: "Joe Figueroa", SortValue: "Joe Figueroa", Align: "left"}, {Text: "41.00", SortValue: 41, Align: "right"}, {Text: "7", SortValue: 7, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "$370.00", SortValue: 370, Align: "right"}, {Text: "$157.00", SortValue: 157, Align: "right"}, {Text: "3.00", SortValue: 3, Align: "right"}], [{Text: "13", SortValue: 0, Align: "right", Index: 12}, {Text: "Jeff Griffiths", SortValue: "Jeff Griffiths", Align: "left"}, {Text: "40.00", SortValue: 40, Align: "right"}, {Text: "10", SortValue: 10, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "$530.00", SortValue: 530, Align: "right"}, {Text: "$-179.00", SortValue: -179, Align: "right"}, {Text: "8.00", SortValue: 8, Align: "right"}], [{Text: "14", SortValue: 0, Align: "right", Index: 13}, {Text: "Randy Michael", SortValue: "Randy Michael", Align: "left"}, {Text: "39.00", SortValue: 39, Align: "right"}, {Text: "7", SortValue: 7, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "$380.00", SortValue: 380, Align: "right"}, {Text: "$89.00", SortValue: 89, Align: "right"}, {Text: "12.00", SortValue: 12, Align: "right"}], [{Text: "15", SortValue: 0, Align: "right", Index: 14}, {Text: "Mark Shannon", SortValue: "Mark Shannon", Align: "left"}, {Text: "39.00", SortValue: 39, Align: "right"}, {Text: "8", SortValue: 8, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "$420.00", SortValue: 420, Align: "right"}, {Text: "$44.00", SortValue: 44, Align: "right"}, {Text: "8.00", SortValue: 8, Align: "right"}], [{Text: "16", SortValue: 0, Align: "right", Index: 15}, {Text: "Gary May", SortValue: "Gary May", Align: "left"}, {Text: "38.00", SortValue: 38, Align: "right"}, {Text: "9", SortValue: 9, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "5", SortValue: 5, Align: "right"}, {Text: "$490.00", SortValue: 490, Align: "right"}, {Text: "$-148.00", SortValue: -148, Align: "right"}, {Text: "4.00", SortValue: 4, Align: "right"}], [{Text: "17", SortValue: 0, Align: "right", Index: 16}, {Text: "Nick Thomas", SortValue: "Nick Thomas", Align: "left"}, {Text: "31.00", SortValue: 31, Align: "right"}, {Text: "8", SortValue: 8, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "3", SortValue: 3, Align: "right"}, {Text: "$440.00", SortValue: 440, Align: "right"}, {Text: "$-105.00", SortValue: -105, Align: "right"}, {Text: "14.00", SortValue: 14, Align: "right"}], [{Text: "18", SortValue: 0, Align: "right", Index: 17}, {Text: "Jeff Stutsman", SortValue: "Jeff Stutsman", Align: "left"}, {Text: "31.00", SortValue: 31, Align: "right"}, {Text: "11", SortValue: 11, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "5", SortValue: 5, Align: "right"}, {Text: "$590.00", SortValue: 590, Align: "right"}, {Text: "$-504.00", SortValue: -504, Align: "right"}, {Text: "2.00", SortValue: 2, Align: "right"}], [{Text: "19", SortValue: 0, Align: "right", Index: 18}, {Text: "Cole Young", SortValue: "Cole Young", Align: "left"}, {Text: "30.00", SortValue: 30, Align: "right"}, {Text: "10", SortValue: 10, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "5", SortValue: 5, Align: "right"}, {Text: "$530.00", SortValue: 530, Align: "right"}, {Text: "$-450.00", SortValue: -450, Align: "right"}, {Text: "3.00", SortValue: 3, Align: "right"}], [{Text: "20", SortValue: 0, Align: "right", Index: 19}, {Text: "Rod Roten", SortValue: "Rod Roten", Align: "left"}, {Text: "28.00", SortValue: 28, Align: "right"}, {Text: "11", SortValue: 11, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "3", SortValue: 3, Align: "right"}, {Text: "$590.00", SortValue: 590, Align: "right"}, {Text: "$-320.00", SortValue: -320, Align: "right"}, {Text: "8.00", SortValue: 8, Align: "right"}], [{Text: "21", SortValue: 0, Align: "right", Index: 20}, {Text: "Bill Gillette", SortValue: "Bill Gillette", Align: "left"}, {Text: "27.00", SortValue: 27, Align: "right"}, {Text: "11", SortValue: 11, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "$590.00", SortValue: 590, Align: "right"}, {Text: "$-382.00", SortValue: -382, Align: "right"}, {Text: "4.00", SortValue: 4, Align: "right"}], [{Text: "22", SortValue: 0, Align: "right", Index: 21}, {Text: "Sean Weaks", SortValue: "Sean Weaks", Align: "left"}, {Text: "25.00", SortValue: 25, Align: "right"}, {Text: "3", SortValue: 3, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "$160.00", SortValue: 160, Align: "right"}, {Text: "$329.00", SortValue: 329, Align: "right"}, {Text: "8.00", SortValue: 8, Align: "right"}], [{Text: "23", SortValue: 0, Align: "right", Index: 22}, {Text: "Clay Barton", SortValue: "Clay Barton", Align: "left"}, {Text: "19.00", SortValue: 19, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$220.00", SortValue: 220, Align: "right"}, {Text: "$100.00", SortValue: 100, Align: "right"}, {Text: "4.00", SortValue: 4, Align: "right"}], [{Text: "24", SortValue: 0, Align: "right", Index: 23}, {Text: "Marc Pyatt", SortValue: "Marc Pyatt", Align: "left"}, {Text: "16.00", SortValue: 16, Align: "right"}, {Text: "5", SortValue: 5, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$260.00", SortValue: 260, Align: "right"}, {Text: "$-59.00", SortValue: -59, Align: "right"}, {Text: "6.00", SortValue: 6, Align: "right"}], [{Text: "25", SortValue: 0, Align: "right", Index: 24}, {Text: "Rob Aronoff", SortValue: "Rob Aronoff", Align: "left"}, {Text: "14.00", SortValue: 14, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$210.00", SortValue: 210, Align: "right"}, {Text: "$-53.00", SortValue: -53, Align: "right"}, {Text: "5.00", SortValue: 5, Align: "right"}], [{Text: "26", SortValue: 0, Align: "right", Index: 25}, {Text: "Eric Vargus", SortValue: "Eric Vargus", Align: "left"}, {Text: "14.00", SortValue: 14, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$100.00", SortValue: 100, Align: "right"}, {Text: "$98.00", SortValue: 98, Align: "right"}, {Text: "5.00", SortValue: 5, Align: "right"}], [{Text: "27", SortValue: 0, Align: "right", Index: 26}, {Text: "Jim Fair", SortValue: "Jim Fair", Align: "left"}, {Text: "12.00", SortValue: 12, Align: "right"}, {Text: "6", SortValue: 6, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$310.00", SortValue: 310, Align: "right"}, {Text: "$-248.00", SortValue: -248, Align: "right"}, {Text: "1.00", SortValue: 1, Align: "right"}], [{Text: "28", SortValue: 0, Align: "right", Index: 27}, {Text: "Garret Cockrell", SortValue: "Garret Cockrell", Align: "left"}, {Text: "8.00", SortValue: 8, Align: "right"}, {Text: "8", SortValue: 8, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "$440.00", SortValue: 440, Align: "right"}, {Text: "$-440.00", SortValue: -440, Align: "right"}, {Text: "1.00", SortValue: 1, Align: "right"}], [{Text: "29", SortValue: 0, Align: "right", Index: 28}, {Text: "Paul McQueary", SortValue: "Paul McQueary", Align: "left"}, {Text: "7.00", SortValue: 7, Align: "right"}, {Text: "2", SortValue: 2, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$100.00", SortValue: 100, Align: "right"}, {Text: "$-40.00", SortValue: -40, Align: "right"}, {Text: "0.00", SortValue: 0, Align: "right"}], [{Text: "30", SortValue: 0, Align: "right", Index: 29}, {Text: "Scott Biavaschi", SortValue: "Scott Biavaschi", Align: "left"}, {Text: "6.00", SortValue: 6, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$60.00", SortValue: 60, Align: "right"}, {Text: "$-60.00", SortValue: -60, Align: "right"}, {Text: "0.00", SortValue: 0, Align: "right"}], [{Text: "31", SortValue: 0, Align: "right", Index: 30}, {Text: "Gary Nolte", SortValue: "Gary Nolte", Align: "left"}, {Text: "6.00", SortValue: 6, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "$60.00", SortValue: 60, Align: "right"}, {Text: "$54.00", SortValue: 54, Align: "right"}, {Text: "5.00", SortValue: 5, Align: "right"}], [{Text: "32", SortValue: 0, Align: "right", Index: 31}, {Text: "Kurt LaCroix", SortValue: "Kurt LaCroix", Align: "left"}, {Text: "4.00", SortValue: 4, Align: "right"}, {Text: "4", SortValue: 4, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "$220.00", SortValue: 220, Align: "right"}, {Text: "$-200.00", SortValue: -200, Align: "right"}, {Text: "1.00", SortValue: 1, Align: "right"}], [{Text: "33", SortValue: 0, Align: "right", Index: 32}, {Text: "Nick Daryanani", SortValue: "Nick Daryanani", Align: "left"}, {Text: "1.00", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "$60.00", SortValue: 60, Align: "right"}, {Text: "$-60.00", SortValue: -60, Align: "right"}, {Text: "0.00", SortValue: 0, Align: "right"}], [{Text: "34", SortValue: 0, Align: "right", Index: 33}, {Text: "Don Mongillo", SortValue: "Don Mongillo", Align: "left"}, {Text: "1.00", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "$50.00", SortValue: 50, Align: "right"}, {Text: "$-50.00", SortValue: -50, Align: "right"}, {Text: "0.00", SortValue: 0, Align: "right"}], [{Text: "35", SortValue: 0, Align: "right", Index: 34}, {Text: "David Redding", SortValue: "David Redding", Align: "left"}, {Text: "1.00", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "$50.00", SortValue: 50, Align: "right"}, {Text: "$-50.00", SortValue: -50, Align: "right"}, {Text: "0.00", SortValue: 0, Align: "right"}], [{Text: "36", SortValue: 0, Align: "right", Index: 35}, {Text: "Darren Landry", SortValue: "Darren Landry", Align: "left"}, {Text: "1.00", SortValue: 1, Align: "right"}, {Text: "1", SortValue: 1, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "0", SortValue: 0, Align: "right"}, {Text: "$50.00", SortValue: 50, Align: "right"}, {Text: "$-50.00", SortValue: -50, Align: "right"}, {Text: "0.00", SortValue: 0, Align: "right"}]];
+  var mIndexCol = -1;
+
+
+
+  // initialize the page
+  function init(inTableID, inHeaderRowID)
+  {
+    mTableID = inTableID;
+    mHeaderRowID = inHeaderRowID;
+
+    // set the "Index" column
+    if(mData.length > 0)
+    {
+      for(var i=0, iLen = mData[0].length; i < iLen; i++)
+      {
+        if(mData[0][i]["IsIndex"])
+          mIndexCol = i;
+      }
+    }
+
+    // install an onClick handler for each column header
+    var theRow = document.getElementById(mHeaderRowID);
+    var getSortFn = function(inIndex) { return function() { sortByColumn(inIndex); }; }
+
+    if(theRow)
+    {
+      for(var i=0, iLen = theRow.cells.length; i < iLen; i++)
+      {
+        if(i != mIndexCol)
+        {
+          theRow.cells[i].onclick = getSortFn(i);
+          theRow.cells[i].style.cursor = "pointer";
+        }
+      }
+    }
+
+    // put a reference to each row in the data, if we haven't already
+    var theRows = document.getElementById(mTableID).rows;
+
+    for(var i=0, iLen = mData.length; i < iLen; i++)
+      mData[i].Row = theRows[i + 1];
+  }
+
+
+
+  // sort fn
+  function sortRow(a, b)
+  {
+    var aVal = a[sortIndex].SortValue;
+    var bVal = b[sortIndex].SortValue;
+
+    if((aVal === null) || (bVal === null))
+    {
+      // for equal values, fall back on the row index
+      if(aVal === bVal)
+        return a[0].Index - b[0].Index;
+
+      return aVal === null ? -1 : 1;
+    }
+
+    if(aVal < bVal)
+      return -1;
+    else if(aVal > bVal)
+      return 1;
+
+    // for equal values, fall back on the row index
+    return a[0].Index - b[0].Index;
+  }
+
+
+
+  function sortByColumn(inIndex)
+  {
+    if(mData.length == 0)
+      return;
+
+    if(inIndex == sortIndex)
+      reverseSort = !reverseSort; // sorting the same column, again, so reverse the current sort
+    else
+      reverseSort = false; // if sorting on a new column, always reset to forward sort
+
+    sortIndex = inIndex;
+
+    var theTable = document.getElementById(mTableID);
+    var theParent = theTable.rows[0].parentNode;
+
+    // remove all rows, in current sort order (appears to be the fastest way)
+    for(var i=0, iLen = mData.length; i < iLen; i++)
+      theParent.removeChild(mData[i].Row);
+
+    // sort the rows
+    mData.sort(sortRow);
+
+    if(reverseSort)
+      mData.reverse();
+
+    // put the rows back in the new sorted order
+    // there may or may not be an empty row followed by a sum and average rows, so for an easy solution insert the
+    // rows before the header row, then pop the header row off and put it back in front of the first row
+    var theHeader = theParent.rows[0];
+
+    for(var i=0, iLen = mData.length; i < iLen; i++)
+    {
+      // set the row's class to maintain even/odd row shading
+      mData[i].Row.className = (i % 2) ? "odd" : "even";
+      theParent.insertBefore(mData[i].Row, theHeader);
+    }
+
+    theParent.removeChild(theHeader);
+    theParent.insertBefore(theHeader, mData[0].Row);
+
+    // update the index column
+    if(mIndexCol >= 0)
+    {
+      for(var i=0, iLen = mData.length; i < iLen; i++)
+        mData[i].Row.cells[mIndexCol][mTextKey] = "" + (i+1);
+    }
+  }
+
+
+
+  return {
+    init: init
+  };
+
+}());
+
+  </script>
+
+  <body onLoad="if(TDSort) { TDSort.init('pTable', 'pColumns') }">
+
+    <center>
+      <table border="0" class="infoTable">
+        <tr> 
+          <td class="eventname" align="center">Player Statistics</td>
+        </tr>
+        <tr>
+          <td class="description" align="center"><statsinfo></td>
+        </tr>
+      </table>
+
+      <p>
+
+      <table id="pTable" border="0" cellspacing="0" class="statsTable">
+        <tr id="pColumns">
+<td valign="middle" align="right" class="statsColumnHeader">
+#
+</td>
+<td valign="middle" align="left" class="statsColumnHeader">
+Name
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+Points
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+Buy-ins
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+1st
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+2nd
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+3rd
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+Final Tables
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+Total Cost
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+Total Take
+</td>
+<td valign="middle" align="right" class="statsColumnHeader">
+Hits
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="left">
+Donnie Jones
+</td>
+<td class="statsColumn" align="right">
+69.00
+</td>
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+8
+</td>
+<td class="statsColumn" align="right">
+$590.00
+</td>
+<td class="statsColumn" align="right">
+$391.00
+</td>
+<td class="statsColumn" align="right">
+19.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="left">
+Chris Anderson
+</td>
+<td class="statsColumn" align="right">
+68.00
+</td>
+<td class="statsColumn" align="right">
+12
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+7
+</td>
+<td class="statsColumn" align="right">
+$640.00
+</td>
+<td class="statsColumn" align="right">
+$115.00
+</td>
+<td class="statsColumn" align="right">
+10.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+3
+</td>
+<td class="statsColumn" align="left">
+Mike Caouette
+</td>
+<td class="statsColumn" align="right">
+60.00
+</td>
+<td class="statsColumn" align="right">
+12
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+7
+</td>
+<td class="statsColumn" align="right">
+$640.00
+</td>
+<td class="statsColumn" align="right">
+$-12.00
+</td>
+<td class="statsColumn" align="right">
+9.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="left">
+Brian Showalter
+</td>
+<td class="statsColumn" align="right">
+60.00
+</td>
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+8
+</td>
+<td class="statsColumn" align="right">
+$580.00
+</td>
+<td class="statsColumn" align="right">
+$-33.00
+</td>
+<td class="statsColumn" align="right">
+6.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+5
+</td>
+<td class="statsColumn" align="left">
+Joe Garrison
+</td>
+<td class="statsColumn" align="right">
+53.00
+</td>
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+5
+</td>
+<td class="statsColumn" align="right">
+$590.00
+</td>
+<td class="statsColumn" align="right">
+$80.00
+</td>
+<td class="statsColumn" align="right">
+5.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+6
+</td>
+<td class="statsColumn" align="left">
+Chad Visser
+</td>
+<td class="statsColumn" align="right">
+53.00
+</td>
+<td class="statsColumn" align="right">
+12
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+6
+</td>
+<td class="statsColumn" align="right">
+$640.00
+</td>
+<td class="statsColumn" align="right">
+$-19.00
+</td>
+<td class="statsColumn" align="right">
+22.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+7
+</td>
+<td class="statsColumn" align="left">
+Kevin Hadall
+</td>
+<td class="statsColumn" align="right">
+52.00
+</td>
+<td class="statsColumn" align="right">
+9
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+$490.00
+</td>
+<td class="statsColumn" align="right">
+$343.00
+</td>
+<td class="statsColumn" align="right">
+15.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+8
+</td>
+<td class="statsColumn" align="left">
+Dave Figueroa
+</td>
+<td class="statsColumn" align="right">
+49.00
+</td>
+<td class="statsColumn" align="right">
+10
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+$530.00
+</td>
+<td class="statsColumn" align="right">
+$66.00
+</td>
+<td class="statsColumn" align="right">
+10.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+9
+</td>
+<td class="statsColumn" align="left">
+Greg Meeks
+</td>
+<td class="statsColumn" align="right">
+44.00
+</td>
+<td class="statsColumn" align="right">
+8
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+3
+</td>
+<td class="statsColumn" align="right">
+$430.00
+</td>
+<td class="statsColumn" align="right">
+$279.00
+</td>
+<td class="statsColumn" align="right">
+10.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+10
+</td>
+<td class="statsColumn" align="left">
+Charlie Capers
+</td>
+<td class="statsColumn" align="right">
+43.00
+</td>
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+$580.00
+</td>
+<td class="statsColumn" align="right">
+$-138.00
+</td>
+<td class="statsColumn" align="right">
+13.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="left">
+Thomas Hanson
+</td>
+<td class="statsColumn" align="right">
+41.00
+</td>
+<td class="statsColumn" align="right">
+9
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+3
+</td>
+<td class="statsColumn" align="right">
+$490.00
+</td>
+<td class="statsColumn" align="right">
+$65.00
+</td>
+<td class="statsColumn" align="right">
+17.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+12
+</td>
+<td class="statsColumn" align="left">
+Joe Figueroa
+</td>
+<td class="statsColumn" align="right">
+41.00
+</td>
+<td class="statsColumn" align="right">
+7
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+$370.00
+</td>
+<td class="statsColumn" align="right">
+$157.00
+</td>
+<td class="statsColumn" align="right">
+3.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+13
+</td>
+<td class="statsColumn" align="left">
+Jeff Griffiths
+</td>
+<td class="statsColumn" align="right">
+40.00
+</td>
+<td class="statsColumn" align="right">
+10
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+$530.00
+</td>
+<td class="statsColumn" align="right">
+$-179.00
+</td>
+<td class="statsColumn" align="right">
+8.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+14
+</td>
+<td class="statsColumn" align="left">
+Randy Michael
+</td>
+<td class="statsColumn" align="right">
+39.00
+</td>
+<td class="statsColumn" align="right">
+7
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+$380.00
+</td>
+<td class="statsColumn" align="right">
+$89.00
+</td>
+<td class="statsColumn" align="right">
+12.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+15
+</td>
+<td class="statsColumn" align="left">
+Mark Shannon
+</td>
+<td class="statsColumn" align="right">
+39.00
+</td>
+<td class="statsColumn" align="right">
+8
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+$420.00
+</td>
+<td class="statsColumn" align="right">
+$44.00
+</td>
+<td class="statsColumn" align="right">
+8.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+16
+</td>
+<td class="statsColumn" align="left">
+Gary May
+</td>
+<td class="statsColumn" align="right">
+38.00
+</td>
+<td class="statsColumn" align="right">
+9
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+5
+</td>
+<td class="statsColumn" align="right">
+$490.00
+</td>
+<td class="statsColumn" align="right">
+$-148.00
+</td>
+<td class="statsColumn" align="right">
+4.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+17
+</td>
+<td class="statsColumn" align="left">
+Nick Thomas
+</td>
+<td class="statsColumn" align="right">
+31.00
+</td>
+<td class="statsColumn" align="right">
+8
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+3
+</td>
+<td class="statsColumn" align="right">
+$440.00
+</td>
+<td class="statsColumn" align="right">
+$-105.00
+</td>
+<td class="statsColumn" align="right">
+14.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+18
+</td>
+<td class="statsColumn" align="left">
+Jeff Stutsman
+</td>
+<td class="statsColumn" align="right">
+31.00
+</td>
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+5
+</td>
+<td class="statsColumn" align="right">
+$590.00
+</td>
+<td class="statsColumn" align="right">
+$-504.00
+</td>
+<td class="statsColumn" align="right">
+2.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+19
+</td>
+<td class="statsColumn" align="left">
+Cole Young
+</td>
+<td class="statsColumn" align="right">
+30.00
+</td>
+<td class="statsColumn" align="right">
+10
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+5
+</td>
+<td class="statsColumn" align="right">
+$530.00
+</td>
+<td class="statsColumn" align="right">
+$-450.00
+</td>
+<td class="statsColumn" align="right">
+3.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+20
+</td>
+<td class="statsColumn" align="left">
+Rod Roten
+</td>
+<td class="statsColumn" align="right">
+28.00
+</td>
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+3
+</td>
+<td class="statsColumn" align="right">
+$590.00
+</td>
+<td class="statsColumn" align="right">
+$-320.00
+</td>
+<td class="statsColumn" align="right">
+8.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+21
+</td>
+<td class="statsColumn" align="left">
+Bill Gillette
+</td>
+<td class="statsColumn" align="right">
+27.00
+</td>
+<td class="statsColumn" align="right">
+11
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+$590.00
+</td>
+<td class="statsColumn" align="right">
+$-382.00
+</td>
+<td class="statsColumn" align="right">
+4.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+22
+</td>
+<td class="statsColumn" align="left">
+Sean Weaks
+</td>
+<td class="statsColumn" align="right">
+25.00
+</td>
+<td class="statsColumn" align="right">
+3
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+$160.00
+</td>
+<td class="statsColumn" align="right">
+$329.00
+</td>
+<td class="statsColumn" align="right">
+8.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+23
+</td>
+<td class="statsColumn" align="left">
+Clay Barton
+</td>
+<td class="statsColumn" align="right">
+19.00
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$220.00
+</td>
+<td class="statsColumn" align="right">
+$100.00
+</td>
+<td class="statsColumn" align="right">
+4.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+24
+</td>
+<td class="statsColumn" align="left">
+Marc Pyatt
+</td>
+<td class="statsColumn" align="right">
+16.00
+</td>
+<td class="statsColumn" align="right">
+5
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$260.00
+</td>
+<td class="statsColumn" align="right">
+$-59.00
+</td>
+<td class="statsColumn" align="right">
+6.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+25
+</td>
+<td class="statsColumn" align="left">
+Rob Aronoff
+</td>
+<td class="statsColumn" align="right">
+14.00
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$210.00
+</td>
+<td class="statsColumn" align="right">
+$-53.00
+</td>
+<td class="statsColumn" align="right">
+5.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+26
+</td>
+<td class="statsColumn" align="left">
+Eric Vargus
+</td>
+<td class="statsColumn" align="right">
+14.00
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$100.00
+</td>
+<td class="statsColumn" align="right">
+$98.00
+</td>
+<td class="statsColumn" align="right">
+5.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+27
+</td>
+<td class="statsColumn" align="left">
+Jim Fair
+</td>
+<td class="statsColumn" align="right">
+12.00
+</td>
+<td class="statsColumn" align="right">
+6
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$310.00
+</td>
+<td class="statsColumn" align="right">
+$-248.00
+</td>
+<td class="statsColumn" align="right">
+1.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+28
+</td>
+<td class="statsColumn" align="left">
+Garret Cockrell
+</td>
+<td class="statsColumn" align="right">
+8.00
+</td>
+<td class="statsColumn" align="right">
+8
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+$440.00
+</td>
+<td class="statsColumn" align="right">
+$-440.00
+</td>
+<td class="statsColumn" align="right">
+1.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+29
+</td>
+<td class="statsColumn" align="left">
+Paul McQueary
+</td>
+<td class="statsColumn" align="right">
+7.00
+</td>
+<td class="statsColumn" align="right">
+2
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$100.00
+</td>
+<td class="statsColumn" align="right">
+$-40.00
+</td>
+<td class="statsColumn" align="right">
+0.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+30
+</td>
+<td class="statsColumn" align="left">
+Scott Biavaschi
+</td>
+<td class="statsColumn" align="right">
+6.00
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$60.00
+</td>
+<td class="statsColumn" align="right">
+$-60.00
+</td>
+<td class="statsColumn" align="right">
+0.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+31
+</td>
+<td class="statsColumn" align="left">
+Gary Nolte
+</td>
+<td class="statsColumn" align="right">
+6.00
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+$60.00
+</td>
+<td class="statsColumn" align="right">
+$54.00
+</td>
+<td class="statsColumn" align="right">
+5.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+32
+</td>
+<td class="statsColumn" align="left">
+Kurt LaCroix
+</td>
+<td class="statsColumn" align="right">
+4.00
+</td>
+<td class="statsColumn" align="right">
+4
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+$220.00
+</td>
+<td class="statsColumn" align="right">
+$-200.00
+</td>
+<td class="statsColumn" align="right">
+1.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+33
+</td>
+<td class="statsColumn" align="left">
+Nick Daryanani
+</td>
+<td class="statsColumn" align="right">
+1.00
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+$60.00
+</td>
+<td class="statsColumn" align="right">
+$-60.00
+</td>
+<td class="statsColumn" align="right">
+0.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+34
+</td>
+<td class="statsColumn" align="left">
+Don Mongillo
+</td>
+<td class="statsColumn" align="right">
+1.00
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+$50.00
+</td>
+<td class="statsColumn" align="right">
+$-50.00
+</td>
+<td class="statsColumn" align="right">
+0.00
+</td>
+</tr>
+<tr class="even">
+<td class="statsColumn" align="right">
+35
+</td>
+<td class="statsColumn" align="left">
+David Redding
+</td>
+<td class="statsColumn" align="right">
+1.00
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+$50.00
+</td>
+<td class="statsColumn" align="right">
+$-50.00
+</td>
+<td class="statsColumn" align="right">
+0.00
+</td>
+</tr>
+<tr class="odd">
+<td class="statsColumn" align="right">
+36
+</td>
+<td class="statsColumn" align="left">
+Darren Landry
+</td>
+<td class="statsColumn" align="right">
+1.00
+</td>
+<td class="statsColumn" align="right">
+1
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+0
+</td>
+<td class="statsColumn" align="right">
+$50.00
+</td>
+<td class="statsColumn" align="right">
+$-50.00
+</td>
+<td class="statsColumn" align="right">
+0.00
+</td>
+</tr>
+      </table>
+    </center>
+
+  </body>
+</html>

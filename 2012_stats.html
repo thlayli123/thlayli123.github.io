@@ -1,0 +1,929 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+    <title>Tournament Director Player Statistics</title>
+  </head>
+
+  <style type="text/css">
+    BODY
+    {
+      background-color: #7288a3;
+    }
+
+    .infotable
+    {
+      border: 2px solid #000000;
+      padding: 8px;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: Tahoma;
+      font-size: 12pt;
+    }
+
+    .eventname
+    {
+      font-size: 16pt;
+      font-weight: bold;
+    }
+
+    .description
+    {
+      font-weight: bold;
+    }
+
+    .statsTable
+    {
+      border: 2px solid #000000;
+      padding: 8px;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: Tahoma;
+      font-size: 10pt;
+    }
+
+    .statsColumnHeader
+    {
+      font-weight: bold;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .statsColumn
+    {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .odd
+    {
+    }
+
+    .even
+    {
+      background-color: #eeeeee;
+    }
+
+  </style>
+
+  <body>
+
+    <center>
+      <table border="0" class="infoTable">
+        <tr> 
+          <td class="eventname" align="center">Player Statistics</td>
+        </tr>
+        <tr>
+          <td class="description" align="center"><statsinfo></td>
+        </tr>
+      </table>
+
+      <p>
+
+      <table border="0" cellspacing="0" class="statsTable">
+        <td valign="middle" align="right" class="statsColumnHeader">#</td>
+<td valign="middle" align="left" class="statsColumnHeader">Name</td>
+<td valign="middle" align="right" class="statsColumnHeader">Buy-ins</td>
+<td valign="middle" align="right" class="statsColumnHeader">Playing Time</td>
+<td valign="middle" align="right" class="statsColumnHeader">Total Cost</td>
+<td valign="middle" align="right" class="statsColumnHeader">Total Winnings</td>
+<td valign="middle" align="right" class="statsColumnHeader">Total Take</td>
+<td valign="middle" align="right" class="statsColumnHeader">Hits</td>
+<td valign="middle" align="right" class="statsColumnHeader">Average Hits</td>
+<td valign="middle" align="right" class="statsColumnHeader">1st</td>
+<td valign="middle" align="right" class="statsColumnHeader">2nd</td>
+<td valign="middle" align="right" class="statsColumnHeader">3rd</td>
+<td valign="middle" align="right" class="statsColumnHeader">Times Placed</td>
+<td valign="middle" align="right" class="statsColumnHeader">Average Placed</td>
+<td valign="middle" align="right" class="statsColumnHeader">Final Tables</td>
+<td valign="middle" align="right" class="statsColumnHeader">Points</td>
+<td valign="middle" align="right" class="statsColumnHeader">Average Points</td>
+<td valign="middle" align="right" class="statsColumnHeader">Overall Score</td>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="left"><nobr>Mark Edmisten</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>25h 21m 57s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$370.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$939.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$569.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>12.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.71</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>64.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>9.14</nobr></td>
+<td class="statsColumn" align="right"><nobr>82.9275</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="left"><nobr>Clay Barton</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>25h 17m 56s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$420.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$885.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$465.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>9.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.13</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>59.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>7.38</nobr></td>
+<td class="statsColumn" align="right"><nobr>76.6448</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>3</nobr></td>
+<td class="statsColumn" align="left"><nobr>Chris Anderson</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>24h 55m 39s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$430.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$759.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$329.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>8.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>53.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>6.63</nobr></td>
+<td class="statsColumn" align="right"><nobr>74.2340</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="left"><nobr>Mark Shannon</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>24h 1m 18s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$430.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$579.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$149.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.63</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>49.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>6.13</nobr></td>
+<td class="statsColumn" align="right"><nobr>69.8749</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="left"><nobr>Jim Fair</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>21h 37m 11s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$480.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$726.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$246.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>13.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.44</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>49.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.44</nobr></td>
+<td class="statsColumn" align="right"><nobr>63.9830</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>6</nobr></td>
+<td class="statsColumn" align="left"><nobr>Greg Meeks</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>25h 21m 35s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$430.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$509.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$79.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>11.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.38</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>46.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.75</nobr></td>
+<td class="statsColumn" align="right"><nobr>69.8188</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="left"><nobr>Charlie Capers</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>26h 40m 35s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$480.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$607.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$127.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>18.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>6</nobr></td>
+<td class="statsColumn" align="right"><nobr>46.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.11</nobr></td>
+<td class="statsColumn" align="right"><nobr>67.9509</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="left"><nobr>Thomas Hanson</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>27h 17m 11s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$480.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$379.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-101.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>15.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.67</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>41.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.56</nobr></td>
+<td class="statsColumn" align="right"><nobr>64.7334</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="left"><nobr>Mike Caouette</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>18h 55m 13s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$480.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$503.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$23.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>9.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3</nobr></td>
+<td class="statsColumn" align="right"><nobr>40.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.44</nobr></td>
+<td class="statsColumn" align="right"><nobr>57.6786</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>10</nobr></td>
+<td class="statsColumn" align="left"><nobr>Brian Showalter</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>18h 45m 6s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$380.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$389.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$9.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.71</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3</nobr></td>
+<td class="statsColumn" align="right"><nobr>37.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.29</nobr></td>
+<td class="statsColumn" align="right"><nobr>66.6877</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>11</nobr></td>
+<td class="statsColumn" align="left"><nobr>Kurt LaCroix</nobr></td>
+<td class="statsColumn" align="right"><nobr>6</nobr></td>
+<td class="statsColumn" align="right"><nobr>17h 26m 43s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$320.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$446.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$126.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>8.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.33</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>6</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3</nobr></td>
+<td class="statsColumn" align="right"><nobr>36.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>6.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>70.6731</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>12</nobr></td>
+<td class="statsColumn" align="left"><nobr>Joe Figueroa</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>20h 42m 33s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$370.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$380.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$10.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.57</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>36.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.14</nobr></td>
+<td class="statsColumn" align="right"><nobr>66.0065</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>13</nobr></td>
+<td class="statsColumn" align="left"><nobr>Nick Thomas</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>16h 47m 16s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$370.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$323.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-47.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>6.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.86</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>34.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.86</nobr></td>
+<td class="statsColumn" align="right"><nobr>61.4753</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>14</nobr></td>
+<td class="statsColumn" align="left"><nobr>David Redding</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>15h 22m 38s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$380.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$509.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$129.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.71</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>33.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.71</nobr></td>
+<td class="statsColumn" align="right"><nobr>61.2568</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>15</nobr></td>
+<td class="statsColumn" align="left"><nobr>Randy Michael</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>21h 2m 51s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$430.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$256.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-174.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.38</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>30.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3.75</nobr></td>
+<td class="statsColumn" align="right"><nobr>57.6404</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>16</nobr></td>
+<td class="statsColumn" align="left"><nobr>Chad Visser</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>16h 36m 40s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$480.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$228.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-252.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.56</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>27.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>44.6700</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>17</nobr></td>
+<td class="statsColumn" align="left"><nobr>Rod Roten</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>18h 46m 45s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$480.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$168.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-312.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>7.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.78</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3</nobr></td>
+<td class="statsColumn" align="right"><nobr>26.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.89</nobr></td>
+<td class="statsColumn" align="right"><nobr>46.9310</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>18</nobr></td>
+<td class="statsColumn" align="left"><nobr>Dave Figueroa</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>14h 28m 16s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$260.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$195.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-65.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>7.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.40</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3</nobr></td>
+<td class="statsColumn" align="right"><nobr>25.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>63.8546</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>19</nobr></td>
+<td class="statsColumn" align="left"><nobr>Gary May</nobr></td>
+<td class="statsColumn" align="right"><nobr>6</nobr></td>
+<td class="statsColumn" align="right"><nobr>17h 17m 27s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$310.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$161.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-149.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>8.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.33</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>6</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3</nobr></td>
+<td class="statsColumn" align="right"><nobr>24.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>59.5822</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>20</nobr></td>
+<td class="statsColumn" align="left"><nobr>Darren Landry</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>17h 38m 43s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$480.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$164.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-316.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>7.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.78</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>9</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>23.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.56</nobr></td>
+<td class="statsColumn" align="right"><nobr>45.5755</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>21</nobr></td>
+<td class="statsColumn" align="left"><nobr>Cole Young</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>14h 5m 13s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$380.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$164.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-216.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.29</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>22.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3.14</nobr></td>
+<td class="statsColumn" align="right"><nobr>49.4922</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>22</nobr></td>
+<td class="statsColumn" align="left"><nobr>Kevin Hadall</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>17h 36m 32s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$380.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$62.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-318.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.43</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>7</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>19.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.71</nobr></td>
+<td class="statsColumn" align="right"><nobr>52.6038</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>23</nobr></td>
+<td class="statsColumn" align="left"><nobr>Sam Lomenzo</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>6h 17m 43s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$110.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$349.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$239.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>8.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>18.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>9.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>84.0952</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>24</nobr></td>
+<td class="statsColumn" align="left"><nobr>Garret Cockrell</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>15h 37m 21s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$420.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$166.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-254.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>11.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.38</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>8</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>18.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.25</nobr></td>
+<td class="statsColumn" align="right"><nobr>43.6514</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>25</nobr></td>
+<td class="statsColumn" align="left"><nobr>Rob Aronoff</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>9h 20m 37s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$220.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$60.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-160.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.25</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>11.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.75</nobr></td>
+<td class="statsColumn" align="right"><nobr>51.8910</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>26</nobr></td>
+<td class="statsColumn" align="left"><nobr>Jon Weidenbach</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>6h 7m 3s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$110.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$58.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-52.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.50</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>10.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>66.1489</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>27</nobr></td>
+<td class="statsColumn" align="left"><nobr>Bill Gillette</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>7h 54m 2s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$210.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$58.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-152.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>4</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>10.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.50</nobr></td>
+<td class="statsColumn" align="right"><nobr>41.4345</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>28</nobr></td>
+<td class="statsColumn" align="left"><nobr>Jeff Griffiths</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>9h 35m 49s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$280.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$20.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-260.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.60</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>8.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.60</nobr></td>
+<td class="statsColumn" align="right"><nobr>41.3487</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>29</nobr></td>
+<td class="statsColumn" align="left"><nobr>David Sutera</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>3h 0m 18s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$60.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$78.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$18.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>8.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>8.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>79.1663</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>30</nobr></td>
+<td class="statsColumn" align="left"><nobr>Paul McQueary</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>8h 10m 1s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$270.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$20.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-250.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.20</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>5</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>6.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.20</nobr></td>
+<td class="statsColumn" align="right"><nobr>33.8099</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>31</nobr></td>
+<td class="statsColumn" align="left"><nobr>Donnie Jones</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>5h 12m 9s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$110.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$10.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-100.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>6.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>3.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>54.3561</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>32</nobr></td>
+<td class="statsColumn" align="left"><nobr>Scott Biavaschi</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>3h 46m 36s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$100.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-100.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>32.9177</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>33</nobr></td>
+<td class="statsColumn" align="left"><nobr>Paul Surprenant</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>2h 14m 4s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$60.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-60.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>54.1686</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>34</nobr></td>
+<td class="statsColumn" align="left"><nobr>Martin Slayne</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>5h 2m 47s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$100.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$10.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-90.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.50</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>2.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>49.9976</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>35</nobr></td>
+<td class="statsColumn" align="left"><nobr>Ron Cannon</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1h 54m 9s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$50.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-50.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>30.7675</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>36</nobr></td>
+<td class="statsColumn" align="left"><nobr>Pete Voehringer</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1h 57m 45s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$50.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$10.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-40.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>34.6165</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>37</nobr></td>
+<td class="statsColumn" align="left"><nobr>Louis Matrone</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>55m 40s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$60.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-60.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>14.2899</nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>38</nobr></td>
+<td class="statsColumn" align="left"><nobr>Kirk Small</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>56m 45s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$50.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-50.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>4.1705</nobr></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>39</nobr></td>
+<td class="statsColumn" align="left"><nobr>Bill Robb</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>3h 15m 2s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$50.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-50.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>0</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>1.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>45.8331</nobr></td>
+</tr>
+<tr class=odd>
+<td colspan=100><span style="font-size: 0px; width: 0px; height: 15px"></span></td>
+</tr>
+<tr class=even>
+<td class="statsColumn" align="right"><nobr>Sum:</nobr></td>
+<td class="statsColumn" align="left"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr>212</nobr></td>
+<td class="statsColumn" align="right"><nobr>537h 23m 9s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$11,330.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$10,170.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-1,160.00</nobr></td>
+<td class="statsColumn" align="right"><nobr>199.00</nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr>81</nobr></td>
+<td class="statsColumn" align="right"><nobr>925.00</nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+</tr>
+<tr class=odd>
+<td class="statsColumn" align="right"><nobr>Avg:</nobr></td>
+<td class="statsColumn" align="left"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr>5.44</nobr></td>
+<td class="statsColumn" align="right"><nobr>13h 46m 45s</nobr></td>
+<td class="statsColumn" align="right"><nobr>$290.51</nobr></td>
+<td class="statsColumn" align="right"><nobr>$260.77</nobr></td>
+<td class="statsColumn" align="right"><nobr>$-29.74</nobr></td>
+<td class="statsColumn" align="right"><nobr>5.10</nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr>23.72</nobr></td>
+<td class="statsColumn" align="right"><nobr></nobr></td>
+<td class="statsColumn" align="right"><nobr>54.7938</nobr></td>
+</tr>
+
+      </table>
+    </center>
+
+  </body>
+</html>

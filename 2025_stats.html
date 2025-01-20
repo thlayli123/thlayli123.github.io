@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!--
+  The Tournament Director
+  Copyright (c) 2004 - 2020 Corey Cooper
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+    <title>Tournament Director Player Statistics</title>
+  </head>
+
+  <style type="text/css">
+html {
+  font-family: Segoe UI;
+  font-size: 9pt;
+}
+
+body {
+  background-color: #5f7a96;
+}
+
+.infoTable {
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-size: 1.0rem;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+  display: inline-block;
+}
+
+.tableHeader {
+  padding: 8px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+}
+
+.eventname {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.description {
+  font-weight: bold;
+}
+
+.statsTable {
+  padding: 8px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 6px;
+}
+
+.statsColumnHeader {
+  font-weight: bold;
+}
+
+.statsColumn {
+  padding: 5px 5px;
+  white-space: nowrap;
+}
+
+.odd {
+}
+
+.even {
+  background-color: #eee;
+}
+
+.playerImageContainer {
+  border: 1px solid #000;
+  border-radius: 50%;
+  background-color: #fff;
+  width: 50px;
+  height: 50px;
+}
+
+.playerImageWidthWise {
+  width: 48px;
+}
+
+.playerImageHeightWise {
+  height: 48px;
+}
+
+  </style>
+
+  <script>
+
+
+var TDSort = (function() {
+  // the column index on which we are sorting
+  var sortIndex = -1;
+  // was the last sort a reverse sort?
+  var reverseSort = false;
+  // not going to try too hard for browser compatibility - just check for IE or non-IE
+  var mTextKey = document.all ? "innerText" : "textContent";
+  var mTableID = "";
+  var mHeaderRowID = "";
+  var mData = [{Index: 0, Columns: [{Text: "1", HTML: "1", SortValue: "1", Align: "right"}, {Text: "Bill Gillette", HTML: "Bill Gillette", SortValue: "bill gillette", Align: "left"}, {Text: "0.00", HTML: "0.00", SortValue: 0, Align: "right"}, {Text: "1", HTML: "1", SortValue: 1, Align: "right"}, {Text: "0", HTML: "0", SortValue: 0, Align: "right"}, {Text: "1", HTML: "1", SortValue: 1, Align: "right"}, {Text: "0", HTML: "0", SortValue: 0, Align: "right"}, {Text: "1", HTML: "1", SortValue: 1, Align: "right"}]}, {Index: 1, Columns: [{Text: "2", HTML: "2", SortValue: "2", Align: "right"}, {Text: "Bill Cunningham", HTML: "Bill Cunningham", SortValue: "bill cunningham", Align: "left"}, {Text: "0.00", HTML: "0.00", SortValue: 0, Align: "right"}, {Text: "1", HTML: "1", SortValue: 1, Align: "right"}, {Text: "1", HTML: "1", SortValue: 1, Align: "right"}, {Text: "0", HTML: "0", SortValue: 0, Align: "right"}, {Text: "0", HTML: "0", SortValue: 0, Align: "right"}, {Text: "1", HTML: "1", SortValue: 1, Align: "right"}]}];
+  var mColumns = [{Key: "_Index", Name: "#"}, {Key: "Name", Name: "Name"}, {Key: "Points", Name: "Points"}, {Key: "Buyins", Name: "Buy-ins"}, {Key: "First", Name: "1st"}, {Key: "Second", Name: "2nd"}, {Key: "Third", Name: "3rd"}, {Key: "FinalTables", Name: "Final Tables"}];
+  var mIndexCol = 0;
+
+
+
+  // initialize the page
+  function init(inTableID, inHeaderRowID) {
+    mTableID = inTableID;
+    mHeaderRowID = inHeaderRowID;
+
+    // install an onClick handler for each column header
+    var theRow = document.getElementById(mHeaderRowID);
+    var getSortFn = function(inIndex) { return function() { sortByColumn(inIndex); }; }
+
+    if(theRow) {
+      for(var i=0, iLen = theRow.cells.length; i < iLen; i++) {
+        if((i != mIndexCol) && (mColumns[i].Key != "_PlayerImage") && (mColumns[i].Key != "_HitmanImage")) {
+          theRow.cells[i].onclick = getSortFn(i);
+          theRow.cells[i].style.cursor = "pointer";
+        }
+      }
+    }
+
+    // put a reference to each row in the data, if we haven't already
+    var theRows = document.getElementById(mTableID).rows;
+
+    for(var i=0, iLen = mData.length; i < iLen; i++)
+      mData[i].Row = theRows[i + 1];
+  }
+
+
+
+  // sort fn
+  function sortRow(a, b) {
+    var aVal = a.Columns[sortIndex].SortValue;
+    var bVal = b.Columns[sortIndex].SortValue;
+
+    if((aVal === null) || (bVal === null)) {
+      // for equal values, fall back on the row index
+      if(aVal === bVal)
+        return a.Index - b.Index;
+
+      return aVal === null ? -1 : 1;
+    }
+
+    if(aVal < bVal)
+      return -1;
+    else if(aVal > bVal)
+      return 1;
+
+    // for equal values, fall back on the row index
+    return a.Index - b.Index;
+  }
+
+
+
+  function sortByColumn(inIndex) {
+    if(mData.length == 0)
+      return;
+
+    if(inIndex == sortIndex)
+      reverseSort = !reverseSort; // sorting the same column, again, so reverse the current sort
+    else
+      reverseSort = false; // if sorting on a new column, always reset to forward sort
+
+    sortIndex = inIndex;
+
+    var theTable = document.getElementById(mTableID);
+    var theParent = theTable.rows[0].parentNode;
+
+    // remove all rows, in current sort order (appears to be the fastest way)
+    for(var i=0, iLen = mData.length; i < iLen; i++)
+      theParent.removeChild(mData[i].Row);
+
+    // sort the rows
+    mData.sort(sortRow);
+
+    if(reverseSort)
+      mData.reverse();
+
+    // put the rows back in the new sorted order
+    // there may or may not be an empty row followed by a sum and average rows, so for an easy solution insert the
+    // rows before the header row, then pop the header row off and put it back in front of the first row
+    var theHeader = theParent.rows[0];
+
+    for(var i=0, iLen = mData.length; i < iLen; i++) {
+      // set the row's class to maintain even/odd row shading
+      mData[i].Row.className = (i % 2) ? "odd" : "even";
+      theParent.insertBefore(mData[i].Row, theHeader);
+    }
+
+    theParent.removeChild(theHeader);
+    theParent.insertBefore(theHeader, mData[0].Row);
+
+    // update the index column
+    if(mIndexCol >= 0) {
+      for(var i=0, iLen = mData.length; i < iLen; i++)
+        mData[i].Row.cells[mIndexCol][mTextKey] = "" + (i+1);
+    }
+  }
+
+
+
+  return {
+    init: init
+  };
+
+}());
+
+  </script>
+
+  <body onLoad="if(TDSort) { TDSort.init('pTable', 'pColumns') }">
+
+    <div style="text-align: center">
+      <div class="infoTable">
+        <div class="tableHeader">
+          <div class="eventname" align="center">Player Statistics</div>
+          <div class="description" align="center"></div>
+        </div>
+
+        <table id="pTable" border="0" cellspacing="0" class="statsTable">
+            <tr id="pColumns">
+    <td valign="middle" align="right" class="statsColumn statsColumnHeader">#</td>
+    <td valign="middle" align="left" class="statsColumn statsColumnHeader">Name</td>
+    <td valign="middle" align="right" class="statsColumn statsColumnHeader">Points</td>
+    <td valign="middle" align="right" class="statsColumn statsColumnHeader">Buy-ins</td>
+    <td valign="middle" align="right" class="statsColumn statsColumnHeader">1st</td>
+    <td valign="middle" align="right" class="statsColumn statsColumnHeader">2nd</td>
+    <td valign="middle" align="right" class="statsColumn statsColumnHeader">3rd</td>
+    <td valign="middle" align="right" class="statsColumn statsColumnHeader">Final Tables</td>
+  </tr>
+  <tr class="even">
+    <td align="right" class="statsColumn">1</td>
+    <td align="left" class="statsColumn">Bill Gillette</td>
+    <td align="right" class="statsColumn">0.00</td>
+    <td align="right" class="statsColumn">1</td>
+    <td align="right" class="statsColumn">0</td>
+    <td align="right" class="statsColumn">1</td>
+    <td align="right" class="statsColumn">0</td>
+    <td align="right" class="statsColumn">1</td>
+  </tr>
+  <tr class="odd">
+    <td align="right" class="statsColumn">2</td>
+    <td align="left" class="statsColumn">Bill Cunningham</td>
+    <td align="right" class="statsColumn">0.00</td>
+    <td align="right" class="statsColumn">1</td>
+    <td align="right" class="statsColumn">1</td>
+    <td align="right" class="statsColumn">0</td>
+    <td align="right" class="statsColumn">0</td>
+    <td align="right" class="statsColumn">1</td>
+  </tr>
+
+        </table>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,2122 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+    <title>Hunter Creek Texas Holdem Tourney</title>
+  </head>
+
+  <style type="text/css">
+    BODY
+    {
+      background-color: #7288a3;
+    }
+
+    .infotable
+    {
+      border: 2px solid #000000;
+      padding: 8px;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: Tahoma;
+      font-size: 12pt;
+    }
+
+    .eventname
+    {
+      font-size: 16pt;
+      font-weight: bold;
+    }
+
+    .description
+    {
+      font-weight: bold;
+    }
+
+    .league
+    {
+    }
+
+    .season
+    {
+    }
+
+    .financials
+    {
+    }
+
+    .info
+    {
+    }
+
+    .playerRankingsTable
+    {
+      border: 2px solid #000000;
+      padding: 8px;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: Tahoma;
+      font-size: 10pt;
+    }
+
+    .playerRankingsColumnHeader
+    {
+      font-weight: bold;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .playerRankingsColumn
+    {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .odd
+    {
+    }
+
+    .even
+    {
+      background-color: #eeeeee;
+    }
+
+  </style>
+
+  <script>
+
+var TDSort = (function()
+{
+  // the column index on which we are sorting
+  var sortIndex = -1;
+  // was the last sort a reverse sort?
+  var reverseSort = false;
+  // not going to try too hard for browser compatibility - just check for IE or non-IE
+  var isIE = document.all ? true : false;
+  var mTableID = "";
+  var mHeaderRowID = "";
+
+
+  // initialize the page
+  function init(inTableID, inHeaderRowID)
+  {
+    mTableID = inTableID;
+    mHeaderRowID = inHeaderRowID;
+
+    // install an onClick handler for each column header
+    var theRow = document.getElementById(mHeaderRowID);
+
+    for(var i=0; i < theRow.cells.length; i++)
+    {
+      theRow.cells[i].onclick = columnClick;
+      theRow.cells[i].style.cursor = "pointer";
+    }
+  }
+
+
+  // given a cell element in the header row, determine its index
+  function getCellColumnIndex(inCell)
+  {
+    var theRow = document.getElementById(mHeaderRowID);
+
+    for(var i=0; i < theRow.cells.length; i++)
+      if(inCell == theRow.cells[i])
+        return i;
+
+    return null;
+  }
+
+
+  // given an element in the header row, determine the index of the column in which it lives
+  function getColumnIndex(inElement)
+  {
+    var theParent = inElement.parentNode;
+
+    while(theParent != null)
+    {
+      if(theParent.id == mHeaderRowID)
+        return getCellColumnIndex(inElement);
+
+      inElement = theParent;
+      theParent = theParent.parentNode;
+    }
+
+    return null;
+  }
+
+
+  // given a cell, try to determine what type of content it holds
+  // (alpha or numeric) so we can attempt to sort appropriately
+  // returns < 0 for numeric, > 0 for alpha, 0 if unknown
+  function guessCellContents(inCell)
+  {
+    var theText = isIE ? inCell.innerText : inCell.textContent;
+
+    // trim whitespace
+    theText = theText.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1").toLowerCase();
+    var i = 0;
+
+    while(i < theText.length)
+    {
+      var c = theText.charAt(i++);
+
+      if((c >= '0') && (c <= '9'))
+        return -1;
+
+      if((c >= 'a') && (c <= 'z'))
+        return 1;
+    }
+
+    return 0;
+  }
+
+
+  // try to determine the content type for a column
+  // returns < 0 for numeric, > 0 for alpha, 0 if unknown
+  function guessContent(inColumnIndex)
+  {
+    var theTable = document.getElementById(mTableID);
+    var theRows = theTable.rows;
+    var alpha = 0, numeric = 0;
+
+    // skip the header row
+    for(var i=1; i < theRows.length; i++)
+    {
+      var theCell = theRows[i].cells[inColumnIndex];
+
+      if(theCell)
+      {
+        var theType = guessCellContents(theCell);
+
+        if(theType < 0)
+          numeric++;
+        else if(theType > 0)
+          alpha++;
+      }
+    }
+
+    if(alpha < numeric)
+      return -1;
+    else if(alpha > numeric)
+      return 1;
+
+    return 0;
+  }
+
+
+  // sort fn
+  function sortRow(a, b)
+  {
+    if(a.key < b.key)
+      return -1;
+    else if(a.key > b.key)
+      return 1;
+
+    return 0;
+  }
+
+
+  function sortByColumn(inIndex)
+  {
+    // create an array of the rows and the sort keys
+    var theData = [];
+    var theTable = document.getElementById(mTableID);
+    var textKey = isIE ? "innerText" : "textContent";
+    var theType = guessContent(inIndex);
+
+    if(inIndex == sortIndex)
+    {
+      // sorting the same column, again, so reverse the current sort
+      reverseSort = !reverseSort;
+    }
+    else
+    {
+      // if sorting on a new column, always reset to forward sort
+      reverseSort = false;
+    }
+
+    sortIndex = inIndex;
+
+    // for each row, create a proxy object to hold a sorting key and
+    // an array of the cells
+    for(var i=1; i < theTable.rows.length; i++)
+    {
+      var theRow = theTable.rows[i];
+      var theCells = [];
+      var theKey = theRow.cells[inIndex][textKey];
+
+      // coerce to numeric
+      if(theType < 0)
+      {
+        theKey = parseFloat(theKey.replace(/[^\d]*/g, ""));
+
+        if(isNaN(theKey))
+          theKey = 0;
+      }
+
+      while(theRow.cells.length > 0)
+        theCells.push(theRow.removeChild(theRow.cells[0]));
+
+      var obj = {
+        cells: theCells,
+        key: theKey
+      };
+
+      theData.push(obj);
+    }
+
+    // sort the rows
+    theData.sort(sortRow);
+
+    if(reverseSort)
+      theData.reverse();
+
+    // put the cells back in the sorted order
+    for(var i=0; i < theData.length; i++)
+    {
+      var theRow = theTable.rows[i+1];
+      var theCells = theData[i].cells;
+
+      for(var j=0; j < theCells.length; j++)
+        theRow.appendChild(theCells[j]);
+    }
+  }
+
+
+
+  function columnClick(inEvent)
+  {
+    var theSrc = null;
+
+    if(isIE)
+      theSrc = window.event.srcElement;
+    else
+      theSrc = inEvent.target;
+
+    if(theSrc == null)
+      return;
+
+    var theIndex = getColumnIndex(theSrc);
+
+    if(theIndex == null)
+      return;
+
+    sortByColumn(theIndex);
+  }
+
+
+  return {
+    init: init
+  };
+
+}());
+
+  </script>
+
+  <body onLoad="if(TDSort) { TDSort.init('pTable', 'pColumns') }">
+
+    <center>
+      <table border="0" class="infoTable">
+        <tr> 
+          <td class="eventname" align="center">Hunter Creek Texas Holdem Tourney</td>
+        </tr>
+        <tr>
+          <td class="description" align="center">January Tourney 2013</td>
+        </tr>
+        <tr>
+          <td class="league" align="center">League: Hunter's Creek Holdem' Tourney</td>
+        </tr>
+        <tr>
+          <td class="season" align="center">Season: 2013 Hunter's Creek Tour</td>
+        </tr>
+        <tr>
+          <td><hr size=1 width=80% style="color: #000000" /></td>
+        </tr>
+        <tr>
+          <td class="financials" align="center">$50.00 Buy-in</td>
+        </tr>
+        <tr>
+          <td class="financials" align="center">No rebuys</td>
+        </tr>
+        <tr>
+          <td class="financials" align="center">$10.00 to add-on (Through Round 1, Max 1 per player)</td>
+        </tr>
+        <tr>
+          <td><hr size=1 width=80% style="color: #000000" /></td>
+        </tr>
+        <tr>
+          <td class="info" align="center">23 Players - 0 Rebuys - 0 Add-ons</td>
+        </tr>
+        <tr>
+          <td class="info" align="center">$1,150.00 Prize Pool - 23 Payouts</td>
+        </tr>
+        <tr>
+          <td class="info" align="center">Started: 7:38:30 pm</td>
+        </tr>
+        <tr>
+          <td class="info" align="center">Ended: 11:40:31 pm</td>
+        </tr>
+      </table>
+
+      <p>
+
+      <table id="pTable" border="0" cellspacing="0" class="playerRankingsTable">
+        <tr id="pColumns"><td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+#
+</nobr>
+</td>
+<td valign="middle" align="
+left
+" class="playerRankingsColumnHeader">
+<nobr>
+First Name
+</nobr>
+</td>
+<td valign="middle" align="
+left
+" class="playerRankingsColumnHeader">
+<nobr>
+Last Name
+</nobr>
+</td>
+<td valign="middle" align="
+center
+" class="playerRankingsColumnHeader">
+<nobr>
+Paid
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Rebuys
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Add-ons
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Total Cost
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Time Out
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Round Out
+</nobr>
+</td>
+<td valign="middle" align="
+left
+" class="playerRankingsColumnHeader">
+<nobr>
+Hitman
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Rank
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Total Winnings
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Points
+</nobr>
+</td>
+<td valign="middle" align="
+right
+" class="playerRankingsColumnHeader">
+<nobr>
+Chip Count
+</nobr>
+</td></tr>
+
+        <tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Mike
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Caouette
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$349.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+17.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$15,000
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+2
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Chad
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Visser
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11:40:31 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+14
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Mike Caouette
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+2
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$215.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+14.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+3
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Marc
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Pyatt
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11:38:52 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+14
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Chad Visser
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+3
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$134.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+4
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Brian
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Showalter
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11:31:59 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+14
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Marc Pyatt
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+4
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$93.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+5
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Thomas
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Hanson
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11:28:06 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+13
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Mike Caouette
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+5
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$88.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+8.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+6
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Gary
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+May
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11:18:19 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+12
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Mike Caouette
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+6
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$68.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+7.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+7
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Bill
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Paulk
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11:13:29 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+12
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Thomas Hanson
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+7
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$58.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+6.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+8
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Clay
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Barton
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11:10:05 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+12
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Thomas Hanson
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+8
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+5.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Garret
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Cockrell
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:46:35 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Marc Pyatt
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+4.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Cole
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Young
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:44:09 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Brian Showalter
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+3.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Mark
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Shannon
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:36:19 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Brian Showalter
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+11
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+2.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+12
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Randy
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Michael
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:33:18 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Thomas Hanson
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+12
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+13
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Jim
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Fair
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:30:55 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Bill Paulk
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+13
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$20.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+14
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Scott
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Biavaschi
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:28:40 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Mike Caouette
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+14
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+15
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Rob
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Aronoff
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:24:10 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Marc Pyatt
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+15
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+16
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+David
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Redding
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+10:04:05 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+8
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Marc Pyatt
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+16
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+17
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Donnie
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Jones
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9:44:37 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+7
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Jim Fair
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+17
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+18
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Kevin
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Hadall
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9:38:05 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+7
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Chad Visser
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+18
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+19
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Chris
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Anderson
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9:13:18 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+6
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Jim Fair
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+19
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+20
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Dave
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Figueroa
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+9:13:18 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+6
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Jim Fair
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+19
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+21
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Rod
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Roten
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+8:49:05 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+4
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Garret Cockrell
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+21
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=odd>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+22
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Charlie
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Capers
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+8:30:08 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+4
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Gary May
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+22
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+<tr class=even>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+23
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Nick
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Thomas
+</nobr>
+</td>
+<td align="center" class="playerRankingsColumn">
+<nobr>
+yes
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+$50.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+8:06:33 pm
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+2
+</nobr>
+</td>
+<td align="left" class="playerRankingsColumn">
+<nobr>
+Rob Aronoff
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+23
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+1.00
+</nobr>
+</td>
+<td align="right" class="playerRankingsColumn">
+<nobr>
+
+</nobr>
+</td>
+</tr>
+</table>
+      </table>
+    </center>
+
+  </body>
+</html>
