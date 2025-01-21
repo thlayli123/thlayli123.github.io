@@ -1,5 +1,5 @@
 fetch('https://thlayli123.github.io/1)%20Jan%202024%20Tourney.html')
-  .then(response => response.json())
+  .then(response => response.text())
   .then(data => {
     const table = document.getElementById('myTable'); // Replace 'myTable' with your table's ID
 
