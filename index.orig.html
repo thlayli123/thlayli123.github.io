@@ -5,7 +5,7 @@
 <p>Tournament Results</p>
 
 Jan 2024
-<table id="csvTable"></table>
+<table id="janTable"></table>
 
 <script>
    // async function fetchCSV(url) {
@@ -20,9 +20,9 @@ Jan 2024
 
     //fetchCSV('https://thlayli123.github.io/jan_24_prizes.csv');
 
-    async function fetchCsvAndCreateTable() {
+    async function fetchCsvAndCreateTable(url,tableId) {
     try {
-      const response = await fetch('https://thlayli123.github.io/jan_24_prizes.csv');
+      const response = await fetch(url);
       const csvText = await response.text();
       const data = parseCsv(csvText);
       createTable(data);
@@ -37,7 +37,7 @@ Jan 2024
   }
 
   function createTable(data) {
-    const table = document.getElementById('csvTable');
+    const table = document.getElementById(tableId);
     data.forEach((row, rowIndex) => {
       const tr = table.insertRow();
       row.forEach((cell, cellIndex) => {
@@ -48,7 +48,7 @@ Jan 2024
     });
   }
 
-  fetchCsvAndCreateTable();
+  fetchCsvAndCreateTable('https://thlayli123.github.io/jan_24_prizes.csv','janTable');
 
 
 </script>
