@@ -50,6 +50,7 @@
       const data = parseCsv(csvText);
       createTable(data,tableId);
     } catch (error) {
+      createTable('No Tournament Results',tableId);
       console.error('Error fetching or parsing CSV:', error);
     }
   }
