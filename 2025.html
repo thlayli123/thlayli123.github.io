@@ -56,12 +56,13 @@
     try {
       const response = await fetch(url);
       const csvText = await response.text();
-      const data = parseCsv(csvText);
-      //if (!data.includes('#,Name,Award,Amount,Points,Awarded To')) {data = '#,Name,Award,Amount,Points,Awarded To'};
+      if (csvText.includes('#,Name,Award,Amount,Points,Awarded To')) {
+         const data = parseCsv(csvText);
+         createTable(data,tableId);
+      } else {createTable(parseCsv('No Tournament Data'),tableId);};
 
-      createTable(data,tableId);
     } catch (error) {
-      createTable(parseCsv('No Tournament Data'),tableId);
+
       console.error('Error fetching or parsing CSV:', error);
     }
   }
