@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <body>
-<h2>Hunters Creek Poker</h2>
 <h3>2025 Tournament Results</h3></p>
 
 <h4>January</h4>
@@ -58,6 +57,8 @@
       const response = await fetch(url);
       const csvText = await response.text();
       const data = parseCsv(csvText);
+      if (!data.includes('#,Name,Award,Amount,Points,Awarded To')) {data = '#,Name,Award,Amount,Points,Awarded To'};
+
       createTable(data,tableId);
     } catch (error) {
       createTable(parseCsv('No Tournament Data'),tableId);
