@@ -57,7 +57,7 @@
       const response = await fetch(url);
       const csvText = await response.text();
       const data = parseCsv(csvText);
-      if (!data.includes('#,Name,Award,Amount,Points,Awarded To')) {data = '#,Name,Award,Amount,Points,Awarded To'};
+      //if (!data.includes('#,Name,Award,Amount,Points,Awarded To')) {data = '#,Name,Award,Amount,Points,Awarded To'};
 
       createTable(data,tableId);
     } catch (error) {
