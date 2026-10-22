@@ -1,0 +1,151 @@
+<!-- Hunters Creek Poker – blinds, payouts & points widget (Blinds page)
+     Paste this whole block into Google Sites: Insert > Embed > Embed code.
+     Reads live from the "Monthly Structure", "TOC Structure", "Payout Structure"
+     and "Points Structure" tabs of the running points sheet. -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#212121; --muted:#6b6b6b; --line:#e6e6e6; --accent:#188038; --accent-soft:#e8f3ec; --break:#f6f6f6; }
+  html, body { margin:0; padding:0; background:transparent; }
+  body { font-family:"Open Sans", Arial, sans-serif; color:var(--ink); font-size:15px; }
+  .tabs { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px; }
+  .tab { font:600 13px "Open Sans",Arial,sans-serif; border:1px solid var(--line); background:#fff; color:var(--ink);
+         padding:6px 12px; border-radius:999px; cursor:pointer; }
+  .tab:hover { border-color:var(--accent); }
+  .tab[aria-selected="true"] { background:var(--accent); border-color:var(--accent); color:#fff; }
+  h2 { font:500 26px "Oswald",Arial,sans-serif; margin:4px 0 2px; letter-spacing:.3px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 12px; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted);
+       border-bottom:2px solid var(--line); padding:6px 8px; font-weight:600; white-space:nowrap; }
+  td { padding:6px 8px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  .n { text-align:right; font-variant-numeric:tabular-nums; }
+  tr.brk td { background:var(--break); color:var(--muted); font-size:13px; font-weight:600; text-align:center; letter-spacing:.5px; }
+  tr.hi td { background:var(--accent-soft); }
+  tr.tot td { font-weight:700; border-top:2px solid var(--line); }
+  .picker { display:flex; align-items:center; gap:12px; margin:0 0 14px; flex-wrap:wrap; }
+  .picker input[type=range] { flex:1; min-width:160px; accent-color:var(--accent); }
+  .count { font:500 32px "Oswald",Arial,sans-serif; min-width:48px; text-align:center; }
+  .stepper { font:600 18px "Open Sans",Arial,sans-serif; width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:#fff; cursor:pointer; }
+  .empty { color:var(--muted); padding:24px 0; }
+  @media (max-width:560px) { th, td { padding:6px 5px; } }
+</style>
+
+<div class="tabs" id="tabs" role="tablist"></div>
+<div id="view"><p class="empty">Loading…</p></div>
+
+<script>
+const SHEET = 'https://docs.google.com/spreadsheets/d/1bg7a_4igZyw5CSUSrKa8cQh-WhKFaGhKKRgM6SBX1ZU';
+const DEFAULT_PLAYERS = 16;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = s => parseFloat(String(s).replace(/[$,]/g,'')) || 0;
+
+function parseCsv(t) {
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i+1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n') { row.push(f.replace(/\r$/, '')); rows.push(row); row = []; f = ''; }
+    else f += c;
+  }
+  row.push(f); rows.push(row);
+  return rows.map(r => r.map(x => x.trim())).filter(r => r.some(Boolean));
+}
+let gidMap;
+async function sheetTab(name) {
+  try {
+    if (!gidMap) {
+      const html = await (await fetch(`${SHEET}/htmlview`)).text();
+      gidMap = Object.fromEntries([...html.matchAll(/name: "([^"]+)", pageUrl: "[^"]*gid=(\d+)/g)].map(m => [m[1], m[2]]));
+    }
+    if (gidMap[name] === undefined) return null;
+    const r = await fetch(`${SHEET}/export?format=csv&gid=${gidMap[name]}`);
+    return r.ok ? parseCsv(await r.text()) : null;
+  } catch (e) { return null; }
+}
+
+// ---------- blind structures ----------
+const clock = m => `${Math.floor(m/60)}:${String(m%60).padStart(2,'0')}`;
+function renderBlinds(title, rows) {
+  let t = 0;
+  const body = rows.slice(1).map(([level, dur, sb, bb]) => {
+    const mins = parseInt(dur) || 0, start = t; t += mins;
+    if (/break/i.test(level)) return `<tr class="brk"><td colspan="4">${esc(level)} · ${mins} min</td></tr>`;
+    return `<tr><td>${esc(level.replace(/^Round\s*/i,'Level '))}</td><td class="n"><b>${esc(sb)} / ${esc(bb)}</b></td>
+      <td class="n">${mins} min</td><td class="n">${clock(start)}</td></tr>`;
+  }).join('');
+  const levels = rows.filter(r => /round/i.test(r[0])).length;
+  return `<h2>${title}</h2><p class="sub">${levels} levels · elapsed time shown from the first hand</p>
+    <table><thead><tr><th>Level</th><th class="n">Blinds</th><th class="n">Length</th><th class="n">Starts at</th></tr></thead>
+    <tbody>${body}</tbody></table>`;
+}
+
+// ---------- payout / points matrices ("Players" header rows, then 1st/2nd/…/TOC Carry/Total) ----------
+function parseMatrix(rows) {
+  const out = {}; let counts = null;
+  for (const r of rows) {
+    if (/^players$/i.test(r[0])) { counts = r.slice(1).map(Number); continue; }
+    if (!counts || !r[0]) continue;
+    counts.forEach((n, j) => {
+      if (!n || !r[j+1]) return;
+      (out[n] ||= {})[r[0]] = num(r[j+1]);
+    });
+  }
+  return out;
+}
+function renderPayouts(pay, pts, n) {
+  const p = pay[n] || {}, q = pts[n] || {};
+  const places = [...new Set([...Object.keys(p), ...Object.keys(q)])].filter(k => /^\d+(st|nd|rd|th)$/i.test(k))
+                 .sort((a,b) => parseInt(a) - parseInt(b));
+  const money = v => v ? '$' + v.toLocaleString('en-US') : '—';
+  const body = places.map(k => `<tr class="${p[k] ? 'hi' : ''}"><td>${k}</td><td class="n">${money(p[k])}</td><td class="n">${q[k] ?? '—'}</td></tr>`).join('');
+  const toc = p['TOC Carry'], total = p['Total'];
+  return `<table><thead><tr><th>Finish</th><th class="n">Payout</th><th class="n">POY Points</th></tr></thead><tbody>${body}
+    ${toc ? `<tr><td>TOC carry-forward</td><td class="n">${money(toc)}</td><td></td></tr>` : ''}
+    ${total ? `<tr class="tot"><td>Total prize pool</td><td class="n">${money(total)}</td><td></td></tr>` : ''}
+    </tbody></table>`;
+}
+function payoutsView(pay, pts) {
+  const counts = [...new Set([...Object.keys(pay), ...Object.keys(pts)].map(Number))].sort((a,b)=>a-b);
+  const min = counts[0], max = counts[counts.length-1];
+  let n = Math.min(max, Math.max(min, DEFAULT_PLAYERS));
+  setTimeout(() => {
+    const range = document.getElementById('pc'), out = document.getElementById('pcv'), tbl = document.getElementById('ptbl');
+    const set = v => { n = Math.min(max, Math.max(min, v)); range.value = n; out.textContent = n; tbl.innerHTML = renderPayouts(pay, pts, n); };
+    range.oninput = () => set(+range.value);
+    document.getElementById('pminus').onclick = () => set(n - 1);
+    document.getElementById('pplus').onclick  = () => set(n + 1);
+    set(n);
+  });
+  return `<h2>Payouts &amp; Points</h2><p class="sub">Pick the number of players to see what each finish pays</p>
+    <div class="picker"><button class="stepper" id="pminus" aria-label="Fewer players">−</button>
+      <div class="count" id="pcv">${n}</div>
+      <button class="stepper" id="pplus" aria-label="More players">+</button>
+      <input type="range" id="pc" min="${min}" max="${max}" value="${n}" aria-label="Number of players"></div>
+    <div id="ptbl"></div>`;
+}
+
+// ---------- boot ----------
+(async () => {
+  const [monthly, toc, payRows, ptsRows] = await Promise.all(
+    ['Monthly Structure', 'TOC Structure', 'Payout Structure', 'Points Structure'].map(sheetTab));
+  const tabs = document.getElementById('tabs'), view = document.getElementById('view'), views = {};
+  const add = (key, label, render) => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.textContent = label; b.dataset.k = key; b.onclick = () => select(key);
+    tabs.appendChild(b); views[key] = render;
+  };
+  const select = key => {
+    [...tabs.children].forEach(b => b.setAttribute('aria-selected', b.dataset.k === key));
+    view.innerHTML = views[key]();
+  };
+  if (monthly) add('m', 'Monthly blinds', () => renderBlinds('Monthly Tournament Blinds', monthly));
+  if (toc)     add('t', 'TOC blinds', () => renderBlinds('Tournament of Champions Blinds', toc));
+  if (payRows || ptsRows) {
+    const pay = parseMatrix(payRows || []), pts = parseMatrix(ptsRows || []);
+    add('p', 'Payouts & points', () => payoutsView(pay, pts));
+  }
+  tabs.children.length ? select(tabs.children[0].dataset.k) : (view.innerHTML = '<p class="empty">Couldn\'t load the structure sheet.</p>');
+})();
+</script>

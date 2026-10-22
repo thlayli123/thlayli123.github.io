@@ -1,0 +1,183 @@
+<!-- Hunters Creek Poker – results widget
+     Paste this whole block into Google Sites: Insert > Embed > Embed code.
+     For another year's page, change YEAR below (e.g. 2025). Nothing else to edit. -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#212121; --muted:#6b6b6b; --line:#e6e6e6; --accent:#188038; --accent-soft:#e8f3ec; --gold:#b8860b; --silver:#7d7d7d; --bronze:#a0522d; }
+  html, body { margin:0; padding:0; background:transparent; }
+  body { font-family:"Open Sans", Arial, sans-serif; color:var(--ink); font-size:15px; }
+  .tabs { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px; align-items:center; }
+  .tab { font:600 13px "Open Sans",Arial,sans-serif; border:1px solid var(--line); background:#fff; color:var(--ink);
+         padding:6px 12px; border-radius:999px; cursor:pointer; }
+  .tab:hover:not(:disabled) { border-color:var(--accent); }
+  .tab[aria-selected="true"] { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .tab:disabled { color:#bbb; cursor:default; }
+  .sep { flex:1; }
+  h2 { font:500 26px "Oswald",Arial,sans-serif; margin:4px 0 2px; letter-spacing:.3px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 12px; }
+  .podium { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 0 14px; }
+  .card { border:1px solid var(--line); border-radius:10px; padding:10px 12px; border-top:4px solid var(--c); }
+  .card .pl { font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+  .card .nm { font-weight:700; font-size:16px; margin:2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card .amt { font-size:13px; color:var(--muted); }
+  .scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted);
+       border-bottom:2px solid var(--line); padding:6px 8px; font-weight:600; white-space:nowrap; }
+  td { padding:6px 8px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  .n { text-align:right; font-variant-numeric:tabular-nums; }
+  tr.hi td { background:var(--accent-soft); }
+  .more { margin-top:10px; }
+  .empty { color:var(--muted); padding:24px 0; }
+  .foot { color:var(--muted); font-size:12px; margin-top:8px; }
+  .foot a { color:var(--accent); }
+  @media (max-width:560px) { .podium { grid-template-columns:1fr; } .sep { flex-basis:100%; height:0; } th, td { padding:6px 5px; } }
+</style>
+
+<div class="tabs" id="tabs" role="tablist"></div>
+<div id="view"><p class="empty">Loading results…</p></div>
+
+<script>
+const YEAR  = 2026;                                // <-- the only thing to change per page
+const CSV   = 'https://thlayli123.github.io/';     // monthly prize CSVs
+const SHEET = 'https://docs.google.com/spreadsheets/d/1bg7a_4igZyw5CSUSrKa8cQh-WhKFaGhKKRgM6SBX1ZU';
+const LIFETIME_TAB = 'Lifetime Stats';
+const YY = String(YEAR).slice(-2);
+const MONTHS = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+const NAMES  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const HEADER = '#,Name,Award,Amount,Points,Awarded To';
+
+const money = n => '$' + n.toLocaleString('en-US', {maximumFractionDigits:0});
+const num = s => parseFloat(String(s).replace(/[$,]/g,'')) || 0;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isNum = s => /^\s*-?[$\d.,]+\s*$/.test(s);
+
+// RFC-style CSV parser (handles quotes/commas); drops empty rows and empty columns
+function parseCsv(t) {
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i+1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n') { row.push(f.replace(/\r$/, '')); rows.push(row); row = []; f = ''; }
+    else f += c;
+  }
+  row.push(f); rows.push(row);
+  const kept = rows.filter(r => r.some(x => x.trim()));
+  const w = Math.max(0, ...kept.map(r => r.length));
+  const cols = [...Array(w).keys()].filter(j => kept.some(r => (r[j] || '').trim()));
+  return kept.map(r => cols.map(j => (r[j] || '').trim()));
+}
+
+// ---------- monthly results (GitHub Pages CSVs) ----------
+async function loadMonth(m) {
+  try {
+    const r = await fetch(`${CSV}${m}_${YY}_prizes.csv`, {cache:'no-cache'});
+    if (!r.ok) return null;
+    const t = (await r.text()).trim();
+    if (!t.startsWith(HEADER)) return null;
+    const places = [], extras = [];
+    for (const [, label, award, amount, pts, who] of parseCsv(t).slice(1)) {
+      const row = { label, award, amount:num(amount), pts:num(pts), who:who || '' };
+      (/place/i.test(label) && row.who ? places : extras).push(row);
+    }
+    return { places, extras };
+  } catch (e) { return null; }
+}
+
+// ---------- Google Sheet tabs (looked up by tab name, read live) ----------
+let gidMap;
+async function sheetTab(name) {
+  try {
+    if (!gidMap) {
+      const html = await (await fetch(`${SHEET}/htmlview`)).text();
+      gidMap = Object.fromEntries([...html.matchAll(/name: "([^"]+)", pageUrl: "[^"]*gid=(\d+)/g)].map(m => [m[1], m[2]]));
+    }
+    const gid = gidMap[name];
+    if (gid === undefined) return null;
+    const r = await fetch(`${SHEET}/export?format=csv&gid=${gid}`);
+    if (!r.ok) return null;
+    const rows = parseCsv(await r.text());
+    return rows.length > 1 ? rows : null;
+  } catch (e) { return null; }
+}
+
+// ---------- renderers ----------
+function renderMonth(i, d) {
+  const top = d.places.slice(0,3), colors = ['var(--gold)','var(--silver)','var(--bronze)'];
+  const pool = d.places.reduce((s,r)=>s+r.amount,0);
+  const toc = d.extras.find(r => /toc/i.test(r.label));
+  return `
+    <h2>${NAMES[i]} ${YEAR}</h2>
+    <p class="sub">${d.places.length} players · ${money(pool)} paid out${toc ? ` · ${money(toc.amount)} to TOC` : ''}</p>
+    <div class="podium">${top.map((r,k)=>`
+      <div class="card" style="--c:${colors[k]}"><div class="pl">${esc(r.label)}</div>
+      <div class="nm">${esc(r.who)}</div><div class="amt">${r.amount?money(r.amount)+' · ':''}${r.pts} pts</div></div>`).join('')}
+    </div>
+    <table><thead><tr><th>Place</th><th>Player</th><th class="n">Payout</th><th class="n">Points</th></tr></thead><tbody>
+    ${d.places.map((r,k)=>`<tr class="${r.amount?'hi':''}"><td>${k+1}</td><td>${esc(r.who)}</td>
+      <td class="n">${r.amount?money(r.amount):'—'}</td><td class="n">${r.pts}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+// Generic table for a sheet tab; optional extra column; collapses after `limit` rows
+function sheetTable(rows, { extra, limit = 0, hiTop = 3 } = {}) {
+  const [head, ...body] = rows;
+  const numeric = head.map((_, j) => body.every(r => !r[j] || isNum(r[j])));
+  const cell = (v, j) => `<td class="${numeric[j] ? 'n' : ''}">${j === 2 ? `<b>${esc(v)}</b>` : esc(v)}</td>`;
+  const tr = (r, k) => `<tr class="${k < hiTop ? 'hi' : ''}"${limit && k >= limit ? ' data-more hidden' : ''}>
+      ${r.map(cell).join('')}${extra ? `<td class="n">${extra.fn(r)}</td>` : ''}</tr>`;
+  return `<div class="scroll"><table><thead><tr>${head.map((h,j)=>`<th class="${numeric[j]?'n':''}">${esc(h)}</th>`).join('')}
+      ${extra ? `<th class="n">${extra.label}</th>` : ''}</tr></thead>
+    <tbody>${body.map(tr).join('')}</tbody></table></div>
+    ${limit && body.length > limit ? `<button class="tab more" onclick="this.previousElementSibling.querySelectorAll('[data-more]').forEach(e=>e.hidden=false);this.remove()">Show all ${body.length}</button>` : ''}`;
+}
+
+function renderStandings(rows, months) {
+  const won = {};
+  months.forEach(d => d && d.places.forEach(r => won[r.who] = (won[r.who] || 0) + r.amount));
+  const n = months.filter(Boolean).length;
+  const extra = Object.keys(won).length ? { label:'Winnings', fn: r => won[r[1]] ? money(won[r[1]]) : '—' } : null;
+  return `<h2>${YEAR} Player of the Year Standings</h2>
+    <p class="sub">${n ? `After ${n} event${n===1?'':'s'} · ` : ''}from the official running points sheet</p>
+    ${sheetTable(rows, { extra })}`;
+}
+
+function renderLifetime(rows) {
+  return `<h2>Lifetime Stats</h2>
+    <p class="sub">All-time totals across every Hunters Creek event</p>
+    ${sheetTable(rows, { limit: 25 })}
+    <p class="foot">Full spreadsheet: <a href="${SHEET}/edit" target="_blank" rel="noopener">Hunters Creek Poker Tour – Running Points Total</a></p>`;
+}
+
+// ---------- boot ----------
+(async () => {
+  const [months, standings, lifetime] = await Promise.all([
+    Promise.all(MONTHS.map(loadMonth)),
+    sheetTab(String(YEAR)),
+    sheetTab(LIFETIME_TAB),
+  ]);
+  const tabs = document.getElementById('tabs'), view = document.getElementById('view');
+  const views = {};
+  const add = (key, label, render, disabled) => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.textContent = label; b.dataset.k = key; b.disabled = !!disabled;
+    b.onclick = () => select(key); tabs.appendChild(b); views[key] = render;
+  };
+  const select = key => {
+    [...tabs.querySelectorAll('.tab')].forEach(b => b.setAttribute('aria-selected', b.dataset.k === key));
+    view.innerHTML = views[key]();
+  };
+
+  MONTHS.forEach((m,i) => add('m'+i, NAMES[i].slice(0,3), () => renderMonth(i, months[i]), !months[i]));
+  tabs.appendChild(Object.assign(document.createElement('span'), { className:'sep' }));
+  if (standings) add('poy', 'Standings', () => renderStandings(standings, months));
+  if (lifetime)  add('life', 'Lifetime', () => renderLifetime(lifetime));
+
+  const latest = months.map((d,i)=>d?i:-1).filter(i=>i>=0).pop();
+  if (latest !== undefined) select('m'+latest);
+  else if (standings) select('poy');
+  else view.innerHTML = '<p class="empty">No results posted yet this year.</p>';
+})();
+</script>

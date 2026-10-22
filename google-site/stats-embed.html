@@ -1,0 +1,165 @@
+<!-- Hunters Creek Poker – history & stats widget (new "Stats" page, or the Results landing page)
+     Paste this whole block into Google Sites: Insert > Embed > Embed code.
+     Reads live from the "Trophy Totals", "Trophy Names", "Donkey Chart", "Donkey Winners"
+     and "Carryover" tabs of the running points sheet. -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#212121; --muted:#6b6b6b; --line:#e6e6e6; --accent:#188038; --accent-soft:#e8f3ec; --gold:#b8860b; }
+  html, body { margin:0; padding:0; background:transparent; }
+  body { font-family:"Open Sans", Arial, sans-serif; color:var(--ink); font-size:15px; }
+  .tabs { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px; }
+  .tab { font:600 13px "Open Sans",Arial,sans-serif; border:1px solid var(--line); background:#fff; color:var(--ink);
+         padding:6px 12px; border-radius:999px; cursor:pointer; }
+  .tab:hover { border-color:var(--accent); }
+  .tab[aria-selected="true"] { background:var(--accent); border-color:var(--accent); color:#fff; }
+  h2 { font:500 26px "Oswald",Arial,sans-serif; margin:4px 0 2px; letter-spacing:.3px; }
+  h3 { font:500 18px "Oswald",Arial,sans-serif; margin:18px 0 8px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 12px; }
+  .scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted);
+       border-bottom:2px solid var(--line); padding:6px 8px; font-weight:600; white-space:nowrap; }
+  td { padding:6px 8px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  td.wrap { white-space:normal; color:var(--muted); font-size:13px; }
+  .n { text-align:right; font-variant-numeric:tabular-nums; }
+  tr.hi td { background:var(--accent-soft); }
+  tr.tot td { font-weight:700; border-top:2px solid var(--line); }
+  .bar { display:inline-block; height:8px; border-radius:4px; background:var(--accent); vertical-align:middle; margin-left:8px; opacity:.75; }
+  .years { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; }
+  .yr { border:1px solid var(--line); border-radius:10px; padding:10px 12px; }
+  .yr h4 { font:500 20px "Oswald",Arial,sans-serif; margin:0 0 6px; }
+  .yr .big { display:flex; justify-content:space-between; gap:8px; font-size:14px; padding:2px 0; }
+  .yr .big b { color:var(--gold); font-size:12px; text-transform:uppercase; letter-spacing:.5px; }
+  .yr .mo { display:grid; grid-template-columns:40px 1fr; font-size:13px; color:var(--muted); padding:1px 0; }
+  .yr .mo span:last-child { color:var(--ink); }
+  .more { margin-top:12px; }
+  .empty { color:var(--muted); padding:24px 0; }
+  @media (max-width:560px) { th, td { padding:6px 5px; } }
+</style>
+
+<div class="tabs" id="tabs" role="tablist"></div>
+<div id="view"><p class="empty">Loading…</p></div>
+
+<script>
+const SHEET = 'https://docs.google.com/spreadsheets/d/1bg7a_4igZyw5CSUSrKa8cQh-WhKFaGhKKRgM6SBX1ZU';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = s => parseFloat(String(s).replace(/[$,]/g,'')) || 0;
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function parseCsv(t) {
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i+1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n') { row.push(f.replace(/\r$/, '')); rows.push(row); row = []; f = ''; }
+    else f += c;
+  }
+  row.push(f); rows.push(row);
+  return rows.map(r => r.map(x => x.trim())).filter(r => r.some(Boolean));
+}
+let gidMap;
+async function sheetTab(name) {
+  try {
+    if (!gidMap) {
+      const html = await (await fetch(`${SHEET}/htmlview`)).text();
+      gidMap = Object.fromEntries([...html.matchAll(/name: "([^"]+)", pageUrl: "[^"]*gid=(\d+)/g)].map(m => [m[1], m[2]]));
+    }
+    if (gidMap[name] === undefined) return null;
+    const r = await fetch(`${SHEET}/export?format=csv&gid=${gidMap[name]}`);
+    return r.ok ? parseCsv(await r.text()) : null;
+  } catch (e) { return null; }
+}
+const showAll = (label) => `<button class="tab more" onclick="this.parentNode.querySelectorAll('[data-more]').forEach(e=>e.hidden=false);this.remove()">${label}</button>`;
+
+// ---------- trophy leaderboard (Trophy Totals) ----------
+function renderTrophies(rows, names) {
+  const hi = rows.findIndex(r => /^\d{4}$/.test(r[1]));        // header row with the years
+  const years = rows[hi].slice(1);
+  const players = rows.slice(hi + 1).filter(r => r[0] && !/grand total/i.test(r[0]))
+    .map(r => ({ who:r[0], total:num(r[r.length-1]),
+                 by: years.map((y,j) => [y, num(r[j+1])]).filter(([y,c]) => /^\d{4}$/.test(y) && c) }))
+    .sort((a,b) => b.total - a.total || a.who.localeCompare(b.who));
+  const top = players[0]?.total || 1;
+  const lastYear = years.filter(y => /^\d{4}$/.test(y)).pop();
+  const fmt = by => by.map(([y,c]) => `'${y.slice(2)}${c > 1 ? '×'+c : ''}`).join('  ');
+  return `<h2>Trophy Leaderboard</h2>
+    <p class="sub">Monthly wins, TOC and Player of the Year trophies · ${years[0]}–${lastYear}</p>
+    <div class="scroll"><table><thead><tr><th>#</th><th>Player</th><th class="n">Trophies</th><th>By year</th></tr></thead><tbody>
+    ${players.map((p,k) => `<tr class="${k<3?'hi':''}"${k>=20?' data-more hidden':''}><td>${k+1}</td><td>${esc(p.who)}</td>
+      <td class="n"><b>${p.total}</b><span class="bar" style="width:${Math.round(60*p.total/top)}px"></span></td>
+      <td class="wrap">${fmt(p.by)}</td></tr>`).join('')}
+    </tbody></table></div>
+    ${players.length > 20 ? showAll(`Show all ${players.length}`) : ''}`;
+}
+
+// ---------- trophy history by year (Trophy Names) ----------
+function renderHistory(rows) {
+  const byYear = {};
+  rows.slice(1).forEach(([y, what, who]) => { if (/^\d{4}$/.test(y) && who) (byYear[y] ||= []).push([what, who]); });
+  const years = Object.keys(byYear).sort((a,b) => b - a);
+  const card = (y, k) => {
+    const list = byYear[y];
+    const big = list.filter(([w]) => /toc|poy/i.test(w));
+    const mo = list.filter(([w]) => !/toc|poy/i.test(w));
+    return `<div class="yr"${k>=6?' data-more hidden':''}><h4>${y}</h4>
+      ${big.map(([w,n]) => `<div class="big"><b>${/toc/i.test(w)?'Tourney of Champions':'Player of the Year'}</b><span>${esc(n)}</span></div>`).join('')}
+      ${mo.map(([w,n]) => `<div class="mo"><span>${esc(w)}</span><span>${esc(n)}</span></div>`).join('')}</div>`;
+  };
+  return `<h2>Champions by Year</h2><p class="sub">Every trophy winner, newest first</p>
+    <div class="years">${years.map(card).join('')}</div>
+    ${years.length > 6 ? showAll(`Show all ${years.length} years`) : ''}`;
+}
+
+// ---------- donkey award (Donkey Chart + Donkey Winners) ----------
+function renderDonkey(chart, winners) {
+  const list = (chart || []).filter(r => r[0] && !/grand total/i.test(r[0]) && num(r[1]))
+    .map(r => ({ who:r[0], n:num(r[1]) })).sort((a,b) => b.n - a.n || a.who.localeCompare(b.who));
+  const top = list[0]?.n || 1;
+  const recent = (winners || []).slice(1).filter(r => r[0] && r[1]).slice(-12).reverse();
+  return `<h2>Donkey Award</h2><p class="sub">Who's taken home the donkey the most</p>
+    ${recent.length ? `<h3>Most recent</h3><table><tbody>${recent.map((r,k) =>
+      `<tr class="${k===0?'hi':''}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</tbody></table>` : ''}
+    <h3>All-time</h3>
+    <table><thead><tr><th>#</th><th>Player</th><th class="n">Donkeys</th></tr></thead><tbody>
+    ${list.map((p,k) => `<tr${k>=15?' data-more hidden':''}><td>${k+1}</td><td>${esc(p.who)}</td>
+      <td class="n"><b>${p.n}</b><span class="bar" style="width:${Math.round(60*p.n/top)}px"></span></td></tr>`).join('')}
+    </tbody></table>
+    ${list.length > 15 ? showAll(`Show all ${list.length}`) : ''}`;
+}
+
+// ---------- TOC carry-forward (Carryover) ----------
+function renderCarry(rows) {
+  const years = rows[0].slice(1);
+  const data = years.map((y, j) => ({ y, m: MONTHS.map(mo => num((rows.find(r => r[0] === mo) || [])[j+1])) }))
+    .map(d => ({ ...d, total: d.m.reduce((a,b) => a+b, 0) })).filter(d => d.total > 0);
+  const money = v => v ? '$' + v.toLocaleString('en-US') : '';
+  return `<h2>TOC Carry-Forward</h2><p class="sub">Money set aside each month for the Tournament of Champions prize pool</p>
+    <div class="scroll"><table><thead><tr><th>Year</th>${MONTHS.map(m => `<th class="n">${m}</th>`).join('')}<th class="n">Total</th></tr></thead><tbody>
+    ${data.map(d => `<tr><td><b>${esc(d.y)}</b></td>${d.m.map(v => `<td class="n">${v || ''}</td>`).join('')}
+      <td class="n"><b>${money(d.total)}</b></td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+// ---------- boot ----------
+(async () => {
+  const [tt, tn, dc, dw, co] = await Promise.all(
+    ['Trophy Totals', 'Trophy Names', 'Donkey Chart', 'Donkey Winners', 'Carryover'].map(sheetTab));
+  const tabs = document.getElementById('tabs'), view = document.getElementById('view'), views = {};
+  const add = (key, label, render) => {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.textContent = label; b.dataset.k = key; b.onclick = () => select(key);
+    tabs.appendChild(b); views[key] = render;
+  };
+  const select = key => {
+    [...tabs.children].forEach(b => b.setAttribute('aria-selected', b.dataset.k === key));
+    view.innerHTML = views[key]();
+  };
+  if (tt) add('tt', 'Trophy leaders', () => renderTrophies(tt));
+  if (tn) add('tn', 'Champions by year', () => renderHistory(tn));
+  if (dc || dw) add('dk', 'Donkey award', () => renderDonkey(dc, dw));
+  if (co) add('co', 'TOC carry-forward', () => renderCarry(co));
+  tabs.children.length ? select(tabs.children[0].dataset.k) : (view.innerHTML = '<p class="empty">Couldn\'t load the stats sheet.</p>');
+})();
+</script>
