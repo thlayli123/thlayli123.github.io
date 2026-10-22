@@ -9,13 +9,15 @@ In the Sites editor, each one is pasted into **Insert → Embed → Embed code**
 | `blinds-embed.html` | Blinds page | Monthly blinds, TOC blinds, payouts & points by player count. |
 | `stats-embed.html` | Stats page | Trophy leaders, champions by year, donkey award, TOC carry-forward. |
 
+Because this folder is part of the GitHub Pages site, you can preview any widget by opening it in a browser, e.g. https://thlayli123.github.io/google-site/blinds-embed.html.
+
 After pasting, drag the embed box tall enough that the longest tab fits without its own scroll bar.
 
 ## Where the data comes from
 
 The widgets read live data every time the page loads, so there's nothing to re-paste when results change.
 
-- **Monthly results:** CSV files on **https://thlayli123.github.io/** (the `thlayli123.github.io` repo, not this one), named `mmm_yy_prizes.csv`.
+- **Monthly results:** CSV files in the root of this repo, served at **https://thlayli123.github.io/**, named `mmm_yy_prizes.csv`.
 - **Everything else:** the Google Sheet "Hunters Creek Poker Tour - Running Points Total"
   (`1bg7a_4igZyw5CSUSrKa8cQh-WhKFaGhKKRgM6SBX1ZU`). It must stay shared as **Anyone with the link can view**.
 
@@ -31,7 +33,7 @@ If a tab is missing or renamed, its button just disappears from the widget. Noth
 
 ## Every month
 
-1. Upload the results CSV to the thlayli123.github.io repo, e.g. `oct_26_prizes.csv`.
+1. Add the results CSV to the root of this repo (not this folder) and push, e.g. `oct_26_prizes.csv`.
    - The name must be a three-letter lowercase month, underscore, two-digit year, then `_prizes.csv`.
    - The first line must be exactly `#,Name,Award,Amount,Points,Awarded To`.
 2. Update the Google Sheet as usual: the year tab, Lifetime Stats, Carryover, Trophy Names, and Donkey Winners.
@@ -47,7 +49,7 @@ The month button lights up and the page opens on the newest month automatically.
 
 Leave last year's page alone; it keeps showing its own year.
 
-**GitHub (thlayli123.github.io):** use the new year in file names, e.g. `jan_27_prizes.csv`.
+**GitHub (this repo):** use the new year in file names, e.g. `jan_27_prizes.csv`.
 
 **Google Sheet:**
 - Add a tab named exactly with the new year (e.g. `2027`). The Standings button appears once it exists.

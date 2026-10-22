@@ -1,0 +1,107 @@
+<!-- Hunters Creek Poker – "This season" strip for the Home page
+     Paste this whole block into Google Sites: Insert > Embed > Embed code.
+     Nothing to edit: it always shows the most recent month posted and that year's POY standings.
+     (Early January, before the first results file of the new year, it keeps showing last year.) -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1f1f1f; --muted:#666; --line:#e6e6e6; --felt:#0f5132; --gold:#b8860b; }
+  html, body { margin:0; padding:0; background:transparent; }
+  body { font-family:"Open Sans", Arial, sans-serif; color:var(--ink); font-size:15px; }
+  .row { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  .stat { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px; min-width:0; }
+  .lbl { font-size:12px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); font-weight:600; }
+  .big { font:500 28px "Oswald", Arial, sans-serif; margin:4px 0 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sub { color:var(--muted); font-size:13px; }
+  .sub b { color:var(--felt); }
+  ol { margin:6px 0 0; padding:0; list-style:none; font-size:14px; }
+  ol li { display:flex; justify-content:space-between; gap:8px; padding:3px 0; border-bottom:1px solid var(--line); }
+  ol li:last-child { border-bottom:0; }
+  ol li span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  ol li span:first-child::before { content:attr(data-n) ". "; color:var(--muted); }
+  ol li span:last-child { font-weight:700; font-variant-numeric:tabular-nums; }
+  .empty { color:var(--muted); padding:16px 0; }
+  @media (max-width:640px) {
+    .row { grid-template-columns:1fr 1fr; gap:10px; }
+    .stat { padding:12px 14px; }
+    .big { font-size:22px; }
+    .top5 { grid-column:1 / -1; }
+  }
+</style>
+
+<div id="view"><p class="empty">Loading this season…</p></div>
+
+<script>
+const CSV   = 'https://thlayli123.github.io/';
+const SHEET = 'https://docs.google.com/spreadsheets/d/1bg7a_4igZyw5CSUSrKa8cQh-WhKFaGhKKRgM6SBX1ZU';
+const MONTHS = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+const NAMES  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const HEADER = '#,Name,Award,Amount,Points,Awarded To';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = s => parseFloat(String(s).replace(/[$,]/g,'')) || 0;
+const money = n => '$' + n.toLocaleString('en-US', {maximumFractionDigits:0});
+
+function parseCsv(t) {
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i+1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n') { row.push(f.replace(/\r$/, '')); rows.push(row); row = []; f = ''; }
+    else f += c;
+  }
+  row.push(f); rows.push(row);
+  return rows.map(r => r.map(x => x.trim())).filter(r => r.some(Boolean));
+}
+
+// Latest month that has a results file, searching back from the current month (up to 14 months)
+async function latestMonth() {
+  const now = new Date();
+  for (let back = 0; back < 14; back++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - back, 1);
+    const y = d.getFullYear(), m = d.getMonth();
+    try {
+      const r = await fetch(`${CSV}${MONTHS[m]}_${String(y).slice(-2)}_prizes.csv`, {cache:'no-cache'});
+      if (!r.ok) continue;
+      const t = (await r.text()).trim();
+      if (!t.startsWith(HEADER)) continue;
+      const places = parseCsv(t).slice(1).filter(r => /place/i.test(r[1]) && r[5]);
+      if (places.length) return { year:y, month:m, places };
+    } catch (e) {}
+  }
+  return null;
+}
+
+async function standings(year) {
+  try {
+    const html = await (await fetch(`${SHEET}/htmlview`)).text();
+    const m = html.match(new RegExp(`name: "${year}", pageUrl: "[^"]*gid=(\\d+)`));
+    if (!m) return null;
+    const r = await fetch(`${SHEET}/export?format=csv&gid=${m[1]}`);
+    if (!r.ok) return null;
+    const rows = parseCsv(await r.text());
+    const h = rows[0].map(x => x.toLowerCase());
+    const iName = h.indexOf('name'), iPts = h.indexOf('points'), iBuy = h.findIndex(x => x.startsWith('buy'));
+    return rows.slice(1).filter(r => r[iName]).map(r => ({ who:r[iName], pts:num(r[iPts]), events:num(r[iBuy]) }));
+  } catch (e) { return null; }
+}
+
+(async () => {
+  const view = document.getElementById('view');
+  const last = await latestMonth();
+  if (!last) { view.innerHTML = '<p class="empty">Results coming soon.</p>'; return; }
+  const poy = await standings(last.year);
+  const [, , , amount, pts, who] = last.places[0];
+  const leader = poy && poy[0];
+  view.innerHTML = `<div class="row">
+    <div class="stat"><div class="lbl">${NAMES[last.month]} winner</div>
+      <div class="big">${esc(who)}</div>
+      <div class="sub"><b>${money(num(amount))}</b> · ${num(pts)} POY pts</div></div>
+    ${leader ? `<div class="stat"><div class="lbl">${last.year} Player of the Year leader</div>
+      <div class="big">${esc(leader.who)}</div>
+      <div class="sub"><b>${leader.pts} pts</b>${leader.events ? ` · ${leader.events} events` : ''}${poy[1] ? ` · +${leader.pts - poy[1].pts} on 2nd` : ''}</div></div>` : ''}
+    ${poy ? `<div class="stat top5"><div class="lbl">POY top 5</div>
+      <ol>${poy.slice(0,5).map((p,k) => `<li><span data-n="${k+1}">${esc(p.who)}</span><span>${p.pts}</span></li>`).join('')}</ol></div>` : ''}
+  </div>`;
+})();
+</script>
